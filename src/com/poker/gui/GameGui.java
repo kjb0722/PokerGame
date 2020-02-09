@@ -2,20 +2,48 @@ package com.poker.gui;
 
 import javax.swing.JFrame;
 
-public class GameGui extends JFrame{
-	static final int width = 600;
-	static final int height = 600;
-	Board board;
-	public GameGui(){
+import com.poker.game.GamePlay;
+
+public class GameGui extends JFrame {
+	static final int WIDTH = 1000;
+	static final int HEIGHT = 700;
+	private Board board;
+	private MenuPanel menu;
+	private GamePlay play;
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public MenuPanel getMenu() {
+		return menu;
+	}
+
+	public GameGui() {
 		init();
-		
+	}
+
+	public void gameRun() {
+		play = new GamePlay(this);
+		play.gamePlay();
+	}
+
+	public void resetBoard() {
+		board.resetBoard();
+		menu.resetMenu();
+	}
+
+	private void init() {
 		board = new Board();
 		add(board);
-	}
-	private void init() {
+
+		menu = new MenuPanel(this);
+		add(menu);
+
+		setTitle("포커 게임");
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(width, height);
+		setBounds(0, 0, WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
