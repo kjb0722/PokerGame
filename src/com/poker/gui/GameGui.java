@@ -32,9 +32,13 @@ public class GameGui extends JFrame {
 		board.resetBoard();
 		menu.resetMenu();
 	}
+	
+	public void cardSpread(boolean bet, int count) {
+		play.cardSpread(bet, count);
+	}
 
 	private void init() {
-		board = new Board();
+		board = new Board(this);
 		add(board);
 
 		menu = new MenuPanel(this);

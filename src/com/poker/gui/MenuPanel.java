@@ -30,6 +30,10 @@ public class MenuPanel extends JPanel {
 	public void setText(String text) {
 		this.text.setText(text);
 	}
+	
+	public String getText() {
+		return text.getText();
+	}
 
 	private void init() {
 		setBackground(Color.lightGray);
@@ -54,21 +58,12 @@ public class MenuPanel extends JPanel {
 
 		for (int i = 0; i < menuBtn.length; i++) {
 			String btnName = "";
+			menuBtn[i] = new JButton();
+			menuBtn[i].setBounds(GameGui.WIDTH - btnGapX, (GameGui.HEIGHT - 250) + (btnGapY * i), btnWidth, btnHeight);
+			add(menuBtn[i]);
 			switch (i) {
 			case 0:
 				btnName = "게임 시작";
-				break;
-			case 1:
-				btnName = "다시 하기";
-				break;
-			case 2:
-				btnName = "종료";
-				break;
-			}
-
-			menuBtn[i] = new JButton(btnName);
-			menuBtn[i].setBounds(GameGui.WIDTH - btnGapX, (GameGui.HEIGHT - 250) + (btnGapY * i), btnWidth, btnHeight);
-			if (i == 0) {
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -77,7 +72,9 @@ public class MenuPanel extends JPanel {
 						menuBtn[1].setEnabled(true);
 					}
 				});
-			} else if (i == 1) {
+				break;
+			case 1:
+				btnName = "다시 하기";
 				menuBtn[i].setEnabled(false);
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -87,16 +84,18 @@ public class MenuPanel extends JPanel {
 						menuBtn[1].setEnabled(false);
 					}
 				});
-			} else if (i == 2) {
+				break;
+			case 2:
+				btnName = "종료";
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						System.exit(0);
 					}
 				});
+				break;
 			}
-
-			add(menuBtn[i]);
+			menuBtn[i].setText(btnName);
 		}
 	}
 }
