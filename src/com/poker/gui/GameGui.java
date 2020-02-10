@@ -1,5 +1,6 @@
 package com.poker.gui;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.poker.game.GamePlay;
@@ -10,14 +11,6 @@ public class GameGui extends JFrame {
 	private Board board;
 	private MenuPanel menu;
 	private GamePlay play;
-
-	public Board getBoard() {
-		return board;
-	}
-
-	public MenuPanel getMenu() {
-		return menu;
-	}
 
 	public GameGui() {
 		init();
@@ -32,9 +25,13 @@ public class GameGui extends JFrame {
 		board.resetBoard();
 		menu.resetMenu();
 	}
-	
+
 	public void cardSpread(boolean bet, int count) {
 		play.cardSpread(bet, count);
+	}
+
+	public void resetRaiseBtn() {
+		board.resetRaiseBtn();
 	}
 
 	private void init() {
@@ -50,5 +47,25 @@ public class GameGui extends JFrame {
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	public JButton[] getComputerBtn() {
+		return board.getComputerBtn();
+	}
+
+	public JButton[] getPlayerBtn() {
+		return board.getPlayerBtn();
+	}
+
+	public JButton[] getRaiseBtn() {
+		return board.getRaiseBtn();
+	}
+
+	public String getNoticeText() {
+		return menu.getNoticeText();
+	}
+
+	public void setNoticeText(String string) {
+		menu.setNoticeText(string);
 	}
 }

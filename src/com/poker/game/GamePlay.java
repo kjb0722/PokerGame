@@ -3,32 +3,27 @@ package com.poker.game;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JTextArea;
 
-import com.poker.gui.Board;
 import com.poker.gui.GameGui;
-import com.poker.gui.MenuPanel;
 
 public class GamePlay {
 //	{"Hearts", "Clubs", "Spades", "Diamonds"};
 //	{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
-	String[] suits = { "Hearts", "Clubs", "Spades", "Diamonds" };
-	String[] numbers = { "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen",
-			"King", "Ace" };
+	String[] suits = { "hearts", "clubs", "spades", "diamonds" };
+	String[] numbers = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace" };
 	private ArrayList<Card> cards;
-	private Board board;
-	private MenuPanel menu;
+	private GameGui gui;
 	private JButton[] computerBtn;
 	private JButton[] playerBtn;
 	private JButton[] raiseBtn;
 
 	public GamePlay(GameGui gui) {
-		this.board = gui.getBoard();
-		this.menu = gui.getMenu();
-		this.computerBtn = board.getComputerBtn();
-		this.playerBtn = board.getPlayerBtn();
-		this.raiseBtn = board.getRaiseBtn();
+		this.gui = gui;
+		this.computerBtn = gui.getComputerBtn();
+		this.playerBtn = gui.getPlayerBtn();
+		this.raiseBtn = gui.getRaiseBtn();
 
 		cards = new ArrayList<Card>();
 		createCards();
@@ -47,7 +42,7 @@ public class GamePlay {
 			}
 		}
 	}
-
+	
 	public void gamePlay() {
 		cardSpread(false, 3);
 		raiseBtnEnable();
@@ -60,19 +55,41 @@ public class GamePlay {
 	}
 
 	public void cardSpread(boolean bet, int count) {
-		for (int i = 0; i < count; i++) {
+		int spreadCard = spreadCardCounting();
+
+		for (int i = spreadCard; i < spreadCard + count; i++) {
 			Card computerCard = cards.get(i);
 			computerBtn[i].setText("<html>" + computerCard.getSuit() + "<br>" + computerCard.getNumber() + "</html>");
+			computerBtn[i].setIcon(
+					new ImageIcon("img/" + computerCard.getNumber() + "_of_" + computerCard.getSuit() + ".png"));
 			cards.remove(i);
 
 			Card PlayerCard = cards.get(i);
 			playerBtn[i].setText("<html>" + PlayerCard.getSuit() + "<br>" + PlayerCard.getNumber() + "</html>");
+			playerBtn[i]
+					.setIcon(new ImageIcon("img/" + PlayerCard.getNumber() + "_of_" + PlayerCard.getSuit() + ".png"));
 			cards.remove(i);
 		}
-		menu.setText("카드를 "+ count +"장씩 돌립니다.");
-		
-		if(bet) {
-			menu.setText(menu.getText()+"\n베팅해주세요.");
+
+		if (spreadCard == (playerBtn.length - 1)) {
+			gui.setNoticeText(gui.getNoticeText() + "마지막 카드를 돌렸습니다.\n");
+			gui.resetRaiseBtn();
+		} else {
+			gui.setNoticeText(gui.getNoticeText() + "카드를 " + count + "장씩 돌립니다.\n");
 		}
+
+		if (bet) {
+			gui.setNoticeText(gui.getNoticeText() + "베팅해주세요.\n");
+		}
+	}
+
+	private int spreadCardCounting() {
+		for (int i = 0; i < computerBtn.length; i++) {
+			if (computerBtn[i].getText().equals("")) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 }

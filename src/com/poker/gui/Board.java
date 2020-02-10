@@ -1,7 +1,6 @@
 package com.poker.gui;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,18 +38,29 @@ public class Board extends JPanel {
 	public JButton[] getPlayerBtn() {
 		return playerBtn;
 	}
-	
+
 	public JButton[] getRaiseBtn() {
 		return raiseBtn;
 	}
 
 	public void resetBoard() {
+		resetCardBtn();
+		resetRaiseBtn();
+	}
+
+	public void resetCardBtn() {
 		for (int i = 0; i < computerBtn.length; i++) {
 			computerBtn[i].setText("");
-			playerBtn[i].setText("");
+			computerBtn[i].setIcon(null);
 		}
-		
-		for(int i=0; i< raiseBtn.length;i++) {
+		for (int i = 0; i < playerBtn.length; i++) {
+			playerBtn[i].setText("");
+			playerBtn[i].setIcon(null);
+		}
+	}
+
+	public void resetRaiseBtn() {
+		for (int i = 0; i < raiseBtn.length; i++) {
 			raiseBtn[i].setEnabled(false);
 		}
 	}
@@ -68,9 +78,7 @@ public class Board extends JPanel {
 
 		for (int i = 0; i < computerBtn.length; i++) {
 			computerBtn[i] = new JButton();
-			computerBtn[i].setSize(btnWidth, btnHeight);
-			computerBtn[i].setLocation(btnComputerLocationX + (btnWidth * i), btnComputerLocationY);
-			computerBtn[i].setEnabled(false);
+			computerBtn[i].setBounds(btnComputerLocationX + (btnWidth * i), btnComputerLocationY, btnWidth, btnHeight);
 			add(computerBtn[i]);
 		}
 
@@ -86,9 +94,7 @@ public class Board extends JPanel {
 		playerBtn = new JButton[7];
 		for (int i = 0; i < playerBtn.length; i++) {
 			playerBtn[i] = new JButton();
-			playerBtn[i].setSize(btnWidth, btnHeight);
-			playerBtn[i].setLocation(btnPlayerLocationX + (btnWidth * i), btnPlayerLocationY);
-			playerBtn[i].setEnabled(false);
+			playerBtn[i].setBounds(btnPlayerLocationX + (btnWidth * i), btnPlayerLocationY, btnWidth, btnHeight);
 			add(playerBtn[i]);
 		}
 
@@ -130,7 +136,7 @@ public class Board extends JPanel {
 			}
 			raiseBtn[i] = new JButton();
 			raiseBtn[i].setText(btnName);
-			raiseBtn[i].setBounds(80+(i*100), this.getHeight()/2 + 50, btnRaiseWidth, btnRaiseHeight);
+			raiseBtn[i].setBounds(80 + (i * 100), this.getHeight() / 2 + 50, btnRaiseWidth, btnRaiseHeight);
 			raiseBtn[i].setEnabled(false);
 			raiseBtn[i].addActionListener(new ActionListener() {
 				@Override

@@ -14,7 +14,7 @@ public class MenuPanel extends JPanel {
 	private int btnGapX = 200;
 	private int btnGapY = 65;
 	private JButton[] menuBtn;
-	private JTextArea text;
+	private JTextArea noticeText;
 	private GameGui gui;
 
 	MenuPanel(GameGui gui) {
@@ -22,17 +22,17 @@ public class MenuPanel extends JPanel {
 		createComponent();
 		init();
 	}
-	
+
 	public void resetMenu() {
-		text.setText("");
+		noticeText.setText("");
 	}
 
-	public void setText(String text) {
-		this.text.setText(text);
+	public void setNoticeText(String text) {
+		this.noticeText.setText(text);
 	}
-	
-	public String getText() {
-		return text.getText();
+
+	public String getNoticeText() {
+		return noticeText.getText();
 	}
 
 	private void init() {
@@ -47,10 +47,10 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void createText() {
-		text = new JTextArea(10, 10);
-		text.setBounds(GameGui.WIDTH - 240, 10, 215, 300);
-		text.setEnabled(false);
-		add(text);
+		noticeText = new JTextArea(10, 10);
+		noticeText.setBounds(GameGui.WIDTH - 240, 10, 215, 300);
+		noticeText.setEnabled(false);
+		add(noticeText);
 	}
 
 	private void createBtn() {
