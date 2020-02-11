@@ -48,13 +48,27 @@ public class Board extends JPanel {
 		resetRaiseBtn();
 	}
 
+	private enum raiseType {
+		Call("콜"), Bbing("삥"), Tadang("따당"), Half("하프"), Die("다이"), Check("체크");
+
+		private final String value;
+
+		raiseType(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	public void resetCardBtn() {
 		for (int i = 0; i < computerBtn.length; i++) {
-			computerBtn[i].setText("");
+			computerBtn[i].setToolTipText("");
 			computerBtn[i].setIcon(null);
 		}
 		for (int i = 0; i < playerBtn.length; i++) {
-			playerBtn[i].setText("");
+			playerBtn[i].setToolTipText("");
 			playerBtn[i].setIcon(null);
 		}
 	}
@@ -79,6 +93,7 @@ public class Board extends JPanel {
 		for (int i = 0; i < computerBtn.length; i++) {
 			computerBtn[i] = new JButton();
 			computerBtn[i].setBounds(btnComputerLocationX + (btnWidth * i), btnComputerLocationY, btnWidth, btnHeight);
+			computerBtn[i].setToolTipText("");
 			add(computerBtn[i]);
 		}
 
@@ -95,6 +110,7 @@ public class Board extends JPanel {
 		for (int i = 0; i < playerBtn.length; i++) {
 			playerBtn[i] = new JButton();
 			playerBtn[i].setBounds(btnPlayerLocationX + (btnWidth * i), btnPlayerLocationY, btnWidth, btnHeight);
+			playerBtn[i].setToolTipText("");
 			add(playerBtn[i]);
 		}
 
@@ -114,34 +130,38 @@ public class Board extends JPanel {
 		raiseBtn = new JButton[6];
 		for (int i = 0; i < raiseBtn.length; i++) {
 			String btnName = "";
-			switch (i) {
-			case 0:
-				btnName = "콜";
-				break;
-			case 1:
-				btnName = "삥";
-				break;
-			case 2:
-				btnName = "따당";
-				break;
-			case 3:
-				btnName = "하프";
-				break;
-			case 4:
-				btnName = "다이";
-				break;
-			case 5:
-				btnName = "체크";
-				break;
-			}
 			raiseBtn[i] = new JButton();
+			if (i == raiseType.Call.ordinal()) {
+				btnName = raiseType.Call.value;
+				raiseBtn[i].setName(raiseType.Call.name());
+			} else if (i == raiseType.Bbing.ordinal()) {
+				btnName = raiseType.Bbing.value;
+				raiseBtn[i].setName(raiseType.Bbing.name());
+			} else if (i == raiseType.Tadang.ordinal()) {
+				btnName = raiseType.Tadang.value;
+				raiseBtn[i].setName(raiseType.Tadang.name());
+			} else if (i == raiseType.Half.ordinal()) {
+				btnName = raiseType.Half.value;
+				raiseBtn[i].setName(raiseType.Half.name());
+			} else if (i == raiseType.Die.ordinal()) {
+				btnName = raiseType.Die.value;
+				raiseBtn[i].setName(raiseType.Die.name());
+			} else if (i == raiseType.Check.ordinal()) {
+				btnName = raiseType.Check.value;
+				raiseBtn[i].setName(raiseType.Check.name());
+			}
+
 			raiseBtn[i].setText(btnName);
 			raiseBtn[i].setBounds(80 + (i * 100), this.getHeight() / 2 + 50, btnRaiseWidth, btnRaiseHeight);
 			raiseBtn[i].setEnabled(false);
 			raiseBtn[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					gui.cardSpread(true, 1);
+					if (e.getActionCommand() == raiseType.Die.value) {
+						gui.resetBoard();
+					} else {
+						gui.cardSpread(true, 1);
+					}
 				}
 			});
 			add(raiseBtn[i]);

@@ -1,12 +1,16 @@
 package com.poker.game;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 import com.poker.gui.GameGui;
+
+import javafx.geometry.HorizontalDirection;
 
 public class GamePlay {
 //	{"Hearts", "Clubs", "Spades", "Diamonds"};
@@ -42,7 +46,7 @@ public class GamePlay {
 			}
 		}
 	}
-	
+
 	public void gamePlay() {
 		cardSpread(false, 3);
 		raiseBtnEnable();
@@ -59,15 +63,17 @@ public class GamePlay {
 
 		for (int i = spreadCard; i < spreadCard + count; i++) {
 			Card computerCard = cards.get(i);
-			computerBtn[i].setText("<html>" + computerCard.getSuit() + "<br>" + computerCard.getNumber() + "</html>");
+			computerBtn[i].setToolTipText(computerCard.getSuit() + "-" + computerCard.getNumber());
 			computerBtn[i].setIcon(
 					new ImageIcon("img/" + computerCard.getNumber() + "_of_" + computerCard.getSuit() + ".png"));
+			computerBtn[i].setHorizontalTextPosition(SwingConstants.CENTER);
+
 			cards.remove(i);
 
-			Card PlayerCard = cards.get(i);
-			playerBtn[i].setText("<html>" + PlayerCard.getSuit() + "<br>" + PlayerCard.getNumber() + "</html>");
+			Card playerCard = cards.get(i);
+			playerBtn[i].setToolTipText(playerCard.getSuit() + "-" + playerCard.getNumber());
 			playerBtn[i]
-					.setIcon(new ImageIcon("img/" + PlayerCard.getNumber() + "_of_" + PlayerCard.getSuit() + ".png"));
+					.setIcon(new ImageIcon("img/" + playerCard.getNumber() + "_of_" + playerCard.getSuit() + ".png"));
 			cards.remove(i);
 		}
 
@@ -85,7 +91,7 @@ public class GamePlay {
 
 	private int spreadCardCounting() {
 		for (int i = 0; i < computerBtn.length; i++) {
-			if (computerBtn[i].getText().equals("")) {
+			if (computerBtn[i].getToolTipText().equals("")) {
 				return i;
 			}
 		}

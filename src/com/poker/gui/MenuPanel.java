@@ -23,8 +23,13 @@ public class MenuPanel extends JPanel {
 		init();
 	}
 
+	private enum menuType {
+		start, reset, exit
+	}
+
 	public void resetMenu() {
 		noticeText.setText("");
+		enableMenuBtn(true);
 	}
 
 	public void setNoticeText(String text) {
@@ -61,31 +66,24 @@ public class MenuPanel extends JPanel {
 			menuBtn[i] = new JButton();
 			menuBtn[i].setBounds(GameGui.WIDTH - btnGapX, (GameGui.HEIGHT - 250) + (btnGapY * i), btnWidth, btnHeight);
 			add(menuBtn[i]);
-			switch (i) {
-			case 0:
+			if (menuType.start.ordinal() == i) {
 				btnName = "게임 시작";
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						gui.gameRun();
-						menuBtn[0].setEnabled(false);
-						menuBtn[1].setEnabled(true);
+						gameRun();
 					}
 				});
-				break;
-			case 1:
+			} else if (menuType.reset.ordinal() == i) {
 				btnName = "다시 하기";
 				menuBtn[i].setEnabled(false);
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						gui.resetBoard();
-						menuBtn[0].setEnabled(true);
-						menuBtn[1].setEnabled(false);
+						resetBoard();
 					}
 				});
-				break;
-			case 2:
+			} else if (menuType.exit.ordinal() == i) {
 				btnName = "종료";
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -93,9 +91,23 @@ public class MenuPanel extends JPanel {
 						System.exit(0);
 					}
 				});
-				break;
 			}
 			menuBtn[i].setText(btnName);
 		}
+	}
+
+	private void gameRun() {
+		gui.gameRun();
+		enableMenuBtn(false);
+	}
+
+	private void resetBoard() {
+		gui.resetBoard();
+		enableMenuBtn(true);
+	}
+	
+	public void enableMenuBtn(boolean enable) {
+		menuBtn[menuType.start.ordinal()].setEnabled(enable);
+		menuBtn[menuType.reset.ordinal()].setEnabled(!enable);
 	}
 }
