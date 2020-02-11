@@ -1,30 +1,52 @@
 package com.poker.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Board extends JPanel {
+	private final int panelWidth = GameGui.WIDTH -250;
+	private final int panelHeight = GameGui.HEIGHT;
 	private final int btnWidth = 100;
 	private final int btnHeight = 150;
-	private final int btnComputerLocationX = 30;
-	private final int btnComputerLocationY = 30;
-	private final int btnPlayerLocationX = 30;
-	private final int btnPlayerLocationY = 500;
+	private final int btnComputerX = 30;
+	private final int btnComputerY = 30;
+	private final int btnPlayerX = 30;
+	private final int btnPlayerY = 500;
+	private final int labelComputerCardX = (panelWidth / 2) - 40;
+	private final int labelComputerCardY = 5;
 	private final int labelCardWidth = 90;
 	private final int labelCardHeight = 20;
+	private final int labelPlayCardX = (panelWidth / 2) - 40;
+	private final int labelPlayCardY = panelHeight - 225;
+	private final int btnRaiseX = 80;
+	private final int btnRaiseGapX = 100;
+	private final int btnRaiseY = panelHeight / 2 + 50;
 	private final int btnRaiseWidth = 80;
 	private final int btnRaiseHeight = 30;
+	private final int labelMoneyWidth = 200;
+	private final int labelMoneyHeight = 200;
+	private final int labelMoneyX = 220;
+	private final int labelMoneyY = 250;
+	private final int txtMoneyX = 400;
+	private final int txtMoneyY = 335;
+	private final int txtMoneyWidth = 150;
+	private final int txtMoneyHeight = 30;
+	
 	private GameGui gui;
 	private JButton[] computerBtn;
 	private JButton[] playerBtn;
 	private JTextField computerCardLabel;
 	private JTextField playerCardLabel;
 	private JButton[] raiseBtn;
+	private JLabel lblMoney;
+	private JTextField txtMoney;
 
 	public Board(GameGui gui) {
 		this.gui = gui;
@@ -80,11 +102,31 @@ public class Board extends JPanel {
 	}
 
 	private void init() {
-		setBounds(0, 0, GameGui.WIDTH - 250, GameGui.HEIGHT);
+		setBounds(0, 0, panelWidth, panelHeight);
 		setBackground(Color.DARK_GRAY);
 		setLayout(null);
 		CreateComputerComponent();
 		CreatePlayerComponent();
+		CreateMoneyScore();
+	}
+
+	private void CreateMoneyScore() {
+		lblMoney = new JLabel();
+		lblMoney.setText("현재 보유 금액 : ");
+		lblMoney.setBounds(labelMoneyX, labelMoneyY, labelMoneyWidth, labelMoneyHeight);
+		lblMoney.setForeground(Color.white);
+		lblMoney.setFont(new Font("돋움", Font.BOLD, 20));
+		add(lblMoney);
+
+		txtMoney = new JTextField();
+		txtMoney.setText("0");
+		txtMoney.setEnabled(false);
+		txtMoney.setBounds(txtMoneyX, txtMoneyY, txtMoneyWidth, txtMoneyHeight);
+		txtMoney.setEditable(false);
+		txtMoney.setFont(new Font("돋움", Font.BOLD, 20));
+		txtMoney.setBackground(Color.darkGray);
+		txtMoney.setHorizontalAlignment(JTextField.CENTER);
+		add(txtMoney);
 	}
 
 	private void CreateComputerComponent() {
@@ -92,13 +134,13 @@ public class Board extends JPanel {
 
 		for (int i = 0; i < computerBtn.length; i++) {
 			computerBtn[i] = new JButton();
-			computerBtn[i].setBounds(btnComputerLocationX + (btnWidth * i), btnComputerLocationY, btnWidth, btnHeight);
+			computerBtn[i].setBounds(btnComputerX + (btnWidth * i), btnComputerY, btnWidth, btnHeight);
 			computerBtn[i].setToolTipText("");
 			add(computerBtn[i]);
 		}
 
 		computerCardLabel = new JTextField();
-		computerCardLabel.setBounds((this.getWidth() / 2) - 40, 5, labelCardWidth, labelCardHeight);
+		computerCardLabel.setBounds(labelComputerCardX, labelComputerCardY, labelCardWidth, labelCardHeight);
 		computerCardLabel.setText("컴퓨터 카드");
 		computerCardLabel.setHorizontalAlignment(JTextField.CENTER);
 		computerCardLabel.setEnabled(false);
@@ -109,13 +151,13 @@ public class Board extends JPanel {
 		playerBtn = new JButton[7];
 		for (int i = 0; i < playerBtn.length; i++) {
 			playerBtn[i] = new JButton();
-			playerBtn[i].setBounds(btnPlayerLocationX + (btnWidth * i), btnPlayerLocationY, btnWidth, btnHeight);
+			playerBtn[i].setBounds(btnPlayerX + (btnWidth * i), btnPlayerY, btnWidth, btnHeight);
 			playerBtn[i].setToolTipText("");
 			add(playerBtn[i]);
 		}
 
 		playerCardLabel = new JTextField();
-		playerCardLabel.setBounds((this.getWidth() / 2) - 40, this.getHeight() - 225, labelCardWidth, labelCardHeight);
+		playerCardLabel.setBounds(labelPlayCardX, labelPlayCardY, labelCardWidth, labelCardHeight);
 		playerCardLabel.setText("플레이어 카드");
 		playerCardLabel.setHorizontalAlignment(JTextField.CENTER);
 		playerCardLabel.setEnabled(false);
@@ -152,7 +194,7 @@ public class Board extends JPanel {
 			}
 
 			raiseBtn[i].setText(btnName);
-			raiseBtn[i].setBounds(80 + (i * 100), this.getHeight() / 2 + 50, btnRaiseWidth, btnRaiseHeight);
+			raiseBtn[i].setBounds(btnRaiseX + (i * btnRaiseGapX), btnRaiseY, btnRaiseWidth, btnRaiseHeight);
 			raiseBtn[i].setEnabled(false);
 			raiseBtn[i].addActionListener(new ActionListener() {
 				@Override

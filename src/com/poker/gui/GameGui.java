@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.poker.game.GamePlay;
+import com.poker.game.Rank;
 
 public class GameGui extends JFrame {
 	static final int WIDTH = 1000;
@@ -11,6 +12,7 @@ public class GameGui extends JFrame {
 	private Board board;
 	private MenuPanel menu;
 	private GamePlay play;
+	private Rank rank;
 
 	public GameGui() {
 		init();
@@ -40,6 +42,8 @@ public class GameGui extends JFrame {
 
 		menu = new MenuPanel(this);
 		add(menu);
+		
+		rank = new Rank();
 
 		setTitle("포커 게임");
 		setResizable(false);
@@ -67,5 +71,9 @@ public class GameGui extends JFrame {
 
 	public void setNoticeText(String string) {
 		menu.setNoticeText(string);
+	}
+
+	public String rankCheck(String[] hand) {
+		return rank.Checker(hand);
 	}
 }

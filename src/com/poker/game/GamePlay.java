@@ -1,6 +1,5 @@
 package com.poker.game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import com.poker.gui.GameGui;
-
-import javafx.geometry.HorizontalDirection;
 
 public class GamePlay {
 //	{"Hearts", "Clubs", "Spades", "Diamonds"};
@@ -80,6 +77,9 @@ public class GamePlay {
 		if (spreadCard == (playerBtn.length - 1)) {
 			gui.setNoticeText(gui.getNoticeText() + "마지막 카드를 돌렸습니다.\n");
 			gui.resetRaiseBtn();
+			
+			String s = gui.rankCheck(handCheck(computerBtn));
+			String ss = gui.rankCheck(handCheck(playerBtn));
 		} else {
 			gui.setNoticeText(gui.getNoticeText() + "카드를 " + count + "장씩 돌립니다.\n");
 		}
@@ -97,5 +97,14 @@ public class GamePlay {
 		}
 
 		return -1;
+	}
+	
+	private String[] handCheck(JButton[] btn) {
+		String[] hand = new String[btn.length];
+		for(int i=0; i<btn.length; i++) {
+			hand[i] = btn[i].getToolTipText();
+		}
+		
+		return hand;
 	}
 }

@@ -1,20 +1,28 @@
 package com.poker.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class MenuPanel extends JPanel {
 	private final int btnWidth = 150;
 	private final int btnHeight = 50;
-	private int btnGapX = 200;
+	private int btnX = 800;
+	private int btnY = 250;
 	private int btnGapY = 65;
+	private int txtNoticeWidth = 235;
+	private int txtNoticeHeight = 270;
+	private int txtNoticeX = 755;
+	private int txtNoticeY = 5;
 	private JButton[] menuBtn;
 	private JTextArea noticeText;
+	private JScrollPane noticeScroll;
 	private GameGui gui;
 
 	MenuPanel(GameGui gui) {
@@ -47,15 +55,17 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void createComponent() {
-		createText();
+		createNoticeText();
 		createBtn();
 	}
 
-	private void createText() {
-		noticeText = new JTextArea(10, 10);
-		noticeText.setBounds(GameGui.WIDTH - 240, 10, 215, 300);
-		noticeText.setEnabled(false);
-		add(noticeText);
+	private void createNoticeText() {
+		noticeText = new JTextArea();
+		noticeText.setFont(new Font("돋움", Font.BOLD, 15));
+		noticeScroll = new JScrollPane(noticeText);
+		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
+		noticeScroll.setEnabled(false);
+		add(noticeScroll);
 	}
 
 	private void createBtn() {
@@ -64,7 +74,7 @@ public class MenuPanel extends JPanel {
 		for (int i = 0; i < menuBtn.length; i++) {
 			String btnName = "";
 			menuBtn[i] = new JButton();
-			menuBtn[i].setBounds(GameGui.WIDTH - btnGapX, (GameGui.HEIGHT - 250) + (btnGapY * i), btnWidth, btnHeight);
+			menuBtn[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
 			add(menuBtn[i]);
 			if (menuType.start.ordinal() == i) {
 				btnName = "게임 시작";
@@ -105,7 +115,7 @@ public class MenuPanel extends JPanel {
 		gui.resetBoard();
 		enableMenuBtn(true);
 	}
-	
+
 	public void enableMenuBtn(boolean enable) {
 		menuBtn[menuType.start.ordinal()].setEnabled(enable);
 		menuBtn[menuType.reset.ordinal()].setEnabled(!enable);
