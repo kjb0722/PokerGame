@@ -76,4 +76,8 @@ public class GameGui extends JFrame {
 	public String rankCheck(String[] hand) {
 		return rank.Checker(hand);
 	}
+	
+	public Board getBoard() {
+		return board;
+	}
 }

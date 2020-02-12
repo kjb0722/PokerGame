@@ -5,13 +5,12 @@ import java.util.Collections;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import com.poker.gui.GameGui;
 
-public class GamePlay {
-//	{"Hearts", "Clubs", "Spades", "Diamonds"};
-//	{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
+public class GamePlay {	
 	String[] suits = { "hearts", "clubs", "spades", "diamonds" };
 	String[] numbers = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace" };
 	private ArrayList<Card> cards;
@@ -78,8 +77,7 @@ public class GamePlay {
 			gui.setNoticeText(gui.getNoticeText() + "마지막 카드를 돌렸습니다.\n");
 			gui.resetRaiseBtn();
 			
-			String s = gui.rankCheck(handCheck(computerBtn));
-			String ss = gui.rankCheck(handCheck(playerBtn));
+			cardHandCheck();
 		} else {
 			gui.setNoticeText(gui.getNoticeText() + "카드를 " + count + "장씩 돌립니다.\n");
 		}
@@ -87,6 +85,13 @@ public class GamePlay {
 		if (bet) {
 			gui.setNoticeText(gui.getNoticeText() + "베팅해주세요.\n");
 		}
+	}
+
+	private void cardHandCheck() {
+		String s = gui.rankCheck(handCheck(computerBtn));
+		String ss = gui.rankCheck(handCheck(playerBtn));
+		
+		JOptionPane.showMessageDialog(gui.getBoard(), "컴퓨터 패:"+s+"\n플레이어 패:"+ss);
 	}
 
 	private int spreadCardCounting() {
