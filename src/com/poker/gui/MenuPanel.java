@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.poker.emun.MenuType;
+
 public class MenuPanel extends JPanel {
 	private final int btnWidth = 150;
 	private final int btnHeight = 50;
@@ -29,10 +31,6 @@ public class MenuPanel extends JPanel {
 		this.gui = gui;
 		createComponent();
 		init();
-	}
-
-	private enum menuType {
-		start, reset, exit
 	}
 
 	public void resetMenu() {
@@ -76,7 +74,7 @@ public class MenuPanel extends JPanel {
 			menuBtn[i] = new JButton();
 			menuBtn[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
 			add(menuBtn[i]);
-			if (menuType.start.ordinal() == i) {
+			if (MenuType.start.ordinal() == i) {
 				btnName = "게임 시작";
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -84,7 +82,7 @@ public class MenuPanel extends JPanel {
 						gameRun();
 					}
 				});
-			} else if (menuType.reset.ordinal() == i) {
+			} else if (MenuType.reset.ordinal() == i) {
 				btnName = "다시 하기";
 				menuBtn[i].setEnabled(false);
 				menuBtn[i].addActionListener(new ActionListener() {
@@ -93,7 +91,7 @@ public class MenuPanel extends JPanel {
 						resetBoard();
 					}
 				});
-			} else if (menuType.exit.ordinal() == i) {
+			} else if (MenuType.exit.ordinal() == i) {
 				btnName = "종료";
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -117,7 +115,7 @@ public class MenuPanel extends JPanel {
 	}
 
 	public void enableMenuBtn(boolean enable) {
-		menuBtn[menuType.start.ordinal()].setEnabled(enable);
-		menuBtn[menuType.reset.ordinal()].setEnabled(!enable);
+		menuBtn[MenuType.start.ordinal()].setEnabled(enable);
+		menuBtn[MenuType.reset.ordinal()].setEnabled(!enable);
 	}
 }

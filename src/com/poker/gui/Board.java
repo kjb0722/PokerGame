@@ -10,8 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.poker.emun.RaiseType;
+
 public class Board extends JPanel {
-	private final int panelWidth = GameGui.WIDTH -250;
+	private final int panelWidth = GameGui.WIDTH - 250;
 	private final int panelHeight = GameGui.HEIGHT;
 	private final int btnWidth = 100;
 	private final int btnHeight = 150;
@@ -38,7 +40,7 @@ public class Board extends JPanel {
 	private final int txtMoneyY = 335;
 	private final int txtMoneyWidth = 150;
 	private final int txtMoneyHeight = 30;
-	
+
 	private GameGui gui;
 	private JButton[] computerBtn;
 	private JButton[] playerBtn;
@@ -68,20 +70,6 @@ public class Board extends JPanel {
 	public void resetBoard() {
 		resetCardBtn();
 		resetRaiseBtn();
-	}
-
-	private enum raiseType {
-		Call("콜"), Bbing("삥"), Tadang("따당"), Half("하프"), Die("다이"), Check("체크");
-
-		private final String value;
-
-		raiseType(String value) {
-			this.value = value;
-		}
-
-		public String getValue() {
-			return value;
-		}
 	}
 
 	public void resetCardBtn() {
@@ -169,28 +157,30 @@ public class Board extends JPanel {
 //		하프	전체 판돈의 절반, 즉 50% 금액을 베팅합니다.
 //		다이	새로 베팅하지 않고, 이번 판을 포기합니다.
 //		체크	머니를 베팅하지 않고 다음 카드를 받습니다.(보스만 가능)
+//		Call("콜"), Bbing("삥"), Tadang("따당"), Half("하프"), Die("다이"), Check("체크");
+//			0			1			2				3			4			5
 		raiseBtn = new JButton[6];
 		for (int i = 0; i < raiseBtn.length; i++) {
 			String btnName = "";
 			raiseBtn[i] = new JButton();
-			if (i == raiseType.Call.ordinal()) {
-				btnName = raiseType.Call.value;
-				raiseBtn[i].setName(raiseType.Call.name());
-			} else if (i == raiseType.Bbing.ordinal()) {
-				btnName = raiseType.Bbing.value;
-				raiseBtn[i].setName(raiseType.Bbing.name());
-			} else if (i == raiseType.Tadang.ordinal()) {
-				btnName = raiseType.Tadang.value;
-				raiseBtn[i].setName(raiseType.Tadang.name());
-			} else if (i == raiseType.Half.ordinal()) {
-				btnName = raiseType.Half.value;
-				raiseBtn[i].setName(raiseType.Half.name());
-			} else if (i == raiseType.Die.ordinal()) {
-				btnName = raiseType.Die.value;
-				raiseBtn[i].setName(raiseType.Die.name());
-			} else if (i == raiseType.Check.ordinal()) {
-				btnName = raiseType.Check.value;
-				raiseBtn[i].setName(raiseType.Check.name());
+			if (i == RaiseType.Call.ordinal()) {
+				btnName = RaiseType.Call.value;
+				raiseBtn[i].setName(RaiseType.Call.name());
+			} else if (i == RaiseType.Bbing.ordinal()) {
+				btnName = RaiseType.Bbing.value;
+				raiseBtn[i].setName(RaiseType.Bbing.name());
+			} else if (i == RaiseType.Tadang.ordinal()) {
+				btnName = RaiseType.Tadang.value;
+				raiseBtn[i].setName(RaiseType.Tadang.name());
+			} else if (i == RaiseType.Half.ordinal()) {
+				btnName = RaiseType.Half.value;
+				raiseBtn[i].setName(RaiseType.Half.name());
+			} else if (i == RaiseType.Die.ordinal()) {
+				btnName = RaiseType.Die.value;
+				raiseBtn[i].setName(RaiseType.Die.name());
+			} else if (i == RaiseType.Check.ordinal()) {
+				btnName = RaiseType.Check.value;
+				raiseBtn[i].setName(RaiseType.Check.name());
 			}
 
 			raiseBtn[i].setText(btnName);
@@ -199,7 +189,7 @@ public class Board extends JPanel {
 			raiseBtn[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (e.getActionCommand() == raiseType.Die.value) {
+					if (e.getActionCommand() == RaiseType.Die.value) {
 						gui.resetBoard();
 					} else {
 						gui.cardSpread(true, 1);
