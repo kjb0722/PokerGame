@@ -62,10 +62,10 @@ public class GamePlay {
 	}
 
 	private void bet(int betMoney) {
-		//판 돈, 플레이어 보유 금액
+		// 판 돈, 플레이어 보유 금액
 		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
 		int playerMoney = Integer.parseInt(gui.getTxtPlayerMoney().replace(",", ""));
-		
+
 		playerMoney -= betMoney;
 		plateMoney += betMoney;
 		gui.setTxtPlate(df.format(plateMoney));
