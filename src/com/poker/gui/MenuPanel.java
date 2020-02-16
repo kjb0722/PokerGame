@@ -101,7 +101,7 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void gameRun() {
-		txtNotice.setText(txtNotice.getText()+"[게임 시작]\n");
+		txtNotice.setText(txtNotice.getText() + "[게임 시작]\n");
 		gui.gameRun();
 		enableMenuBtn(false);
 	}

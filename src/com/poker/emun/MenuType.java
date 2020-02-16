@@ -13,3 +13,4 @@ public enum MenuType {
 		return this.number;
 	}
 }
+ 

@@ -126,7 +126,7 @@ public class Rank {
 	}
 
 	// 플러쉬 -카드 5장 모두 무늬가 같은 패
-	private boolean flush() {
+	private boolean flush() { 
 		for (int i = 0; i < hands.size(); i++) {
 			int count = 0;
 			for (int j = 0; j < hands.size(); j++) {

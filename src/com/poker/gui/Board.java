@@ -64,7 +64,7 @@ public class Board extends JPanel {
 	private int playerDefaultMoney = 1000000;
 	private int betDefaultMoney = 1000;
 	private ActionListener listener;
-
+ 
 	public Board(GameGui gui) {
 		this.gui = gui;
 		init();

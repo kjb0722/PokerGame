@@ -53,7 +53,7 @@ public class GamePlay {
 			}
 		}
 	}
-
+ 
 	public void gamePlay() {
 		// 카드 돌리기(배팅 여부, 카드 개수)
 		cardSpread(3);

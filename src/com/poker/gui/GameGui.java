@@ -59,7 +59,7 @@ public class GameGui extends JFrame {
 	public void resetPlayerMoney() {
 		board.resetPlayerMoney();
 	}
-	
+
 	public JButton[] getComputerBtn() {
 		return board.getComputerBtn();
 	}
@@ -95,7 +95,7 @@ public class GameGui extends JFrame {
 	public String getTxtPlate() {
 		return board.getTxtPlate();
 	}
-	
+
 	public void setTxtPlate(String text) {
 		board.setTxtPlate(text);
 	}
@@ -103,7 +103,7 @@ public class GameGui extends JFrame {
 	public String getTxtPlayerMoney() {
 		return board.getTxtPlayerMoney();
 	}
-	
+
 	public void setTxtPlayerMoney(String text) {
 		board.setTxtPlayerMoney(text);
 	}

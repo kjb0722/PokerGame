@@ -9,3 +9,4 @@ public enum RaiseType {
 		this.value = value;
 	}
 }
+ 
