@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,25 +22,33 @@ public class Board extends JPanel {
 	private final int btnComputerY = 30;
 	private final int btnPlayerX = 30;
 	private final int btnPlayerY = 500;
-	private final int labelComputerCardX = (panelWidth / 2) - 40;
-	private final int labelComputerCardY = 5;
-	private final int labelCardWidth = 90;
-	private final int labelCardHeight = 20;
-	private final int labelPlayCardX = (panelWidth / 2) - 40;
-	private final int labelPlayCardY = panelHeight - 225;
+	private final int lblComputerCardX = (panelWidth / 2) - 40;
+	private final int lblComputerCardY = 5;
+	private final int lblCardWidth = 90;
+	private final int lblCardHeight = 20;
+	private final int lblPlayCardX = (panelWidth / 2) - 40;
+	private final int lblPlayCardY = panelHeight - 225;
 	private final int btnRaiseX = 80;
 	private final int btnRaiseGapX = 100;
 	private final int btnRaiseY = panelHeight / 2 + 50;
 	private final int btnRaiseWidth = 80;
 	private final int btnRaiseHeight = 30;
-	private final int labelMoneyWidth = 200;
-	private final int labelMoneyHeight = 200;
-	private final int labelMoneyX = 220;
-	private final int labelMoneyY = 250;
-	private final int txtMoneyX = 400;
+	private final int lblMoneyWidth = 200;
+	private final int lblMoneyHeight = 200;
+	private final int lblMoneyX = 150;
+	private final int lblMoneyY = 250;
+	private final int txtMoneyX = 350;
 	private final int txtMoneyY = 335;
-	private final int txtMoneyWidth = 150;
+	private final int txtMoneyWidth = 250;
 	private final int txtMoneyHeight = 30;
+	private final int lblPlateWidth = 100;
+	private final int lblPlateHeight = 100;
+	private final int lblPlateX = 200;
+	private final int lblPlateY = 200;
+	private final int txtPlateX = 300;
+	private final int txtPlateY = 200;
+	private final int txtPlateWidth = 200;
+	private final int txtPlateHeight = 100;
 
 	private GameGui gui;
 	private JButton[] computerBtn;
@@ -47,12 +56,38 @@ public class Board extends JPanel {
 	private JTextField computerCardLabel;
 	private JTextField playerCardLabel;
 	private JButton[] raiseBtn;
-	private JLabel lblMoney;
-	private JTextField txtMoney;
+	private JLabel lblPlayerMoney;
+	private JTextField txtPlayerMoney;
+	private JLabel lblPlate;
+	private JTextField txtPlate;
+	private DecimalFormat df;
+	private int playerDefaultMoney = 1000000;
+	private int betDefaultMoney = 1000;
+	private ActionListener listener;
 
 	public Board(GameGui gui) {
 		this.gui = gui;
 		init();
+	}
+
+	public int getBetDefaultMoney() {
+		return betDefaultMoney;
+	}
+
+	public void setTxtPlayerMoney(String text) {
+		txtPlayerMoney.setText(text);
+	}
+
+	public String getTxtPlayerMoney() {
+		return txtPlayerMoney.getText();
+	}
+
+	public void setTxtPlate(String text) {
+		txtPlate.setText(text);
+	}
+
+	public String getTxtPlate() {
+		return txtPlate.getText();
 	}
 
 	public JButton[] getComputerBtn() {
@@ -67,18 +102,23 @@ public class Board extends JPanel {
 		return raiseBtn;
 	}
 
+	public void resetPlayerMoney() {
+		this.txtPlayerMoney.setText(df.format(playerDefaultMoney));
+	}
+
 	public void resetBoard() {
 		resetCardBtn();
 		resetRaiseBtn();
+		txtPlate.setText(("0"));
 	}
 
 	public void resetCardBtn() {
 		for (int i = 0; i < computerBtn.length; i++) {
-			computerBtn[i].setToolTipText("");
+			computerBtn[i].setName("");
 			computerBtn[i].setIcon(null);
 		}
 		for (int i = 0; i < playerBtn.length; i++) {
-			playerBtn[i].setToolTipText("");
+			playerBtn[i].setName("");
 			playerBtn[i].setIcon(null);
 		}
 	}
@@ -93,86 +133,96 @@ public class Board extends JPanel {
 		setBounds(0, 0, panelWidth, panelHeight);
 		setBackground(Color.DARK_GRAY);
 		setLayout(null);
-		CreateComputerComponent();
-		CreatePlayerComponent();
-		CreateMoneyScore();
+		df = new DecimalFormat("#,###");
+		createBtnListener();
+		createComputerComponent();
+		createPlayerComponent();
+		createMoneyScore();
 	}
 
-	private void CreateMoneyScore() {
-		lblMoney = new JLabel();
-		lblMoney.setText("현재 보유 금액 : ");
-		lblMoney.setBounds(labelMoneyX, labelMoneyY, labelMoneyWidth, labelMoneyHeight);
-		lblMoney.setForeground(Color.white);
-		lblMoney.setFont(new Font("돋움", Font.BOLD, 20));
-		add(lblMoney);
+	private void createMoneyScore() {
+		// 판 돈 라벨
+		lblPlate = new JLabel();
+		lblPlate.setText("판 돈:");
+		lblPlate.setBounds(lblPlateX, lblPlateY, lblPlateWidth, lblPlateHeight);
+		lblPlate.setForeground(Color.white);
+		lblPlate.setFont(new Font("돋움", Font.BOLD, 20));
+		add(lblPlate);
 
-		txtMoney = new JTextField();
-		txtMoney.setText("0");
-		txtMoney.setEnabled(false);
-		txtMoney.setBounds(txtMoneyX, txtMoneyY, txtMoneyWidth, txtMoneyHeight);
-		txtMoney.setEditable(false);
-		txtMoney.setFont(new Font("돋움", Font.BOLD, 20));
-		txtMoney.setBackground(Color.darkGray);
-		txtMoney.setHorizontalAlignment(JTextField.CENTER);
-		add(txtMoney);
+		// 판 돈 텍스트
+		txtPlate = new JTextField();
+		txtPlate.setText(df.format(0));
+		txtPlate.setEnabled(false);
+		txtPlate.setBounds(txtPlateX, txtPlateY, txtPlateWidth, txtPlateHeight);
+		txtPlate.setEditable(false);
+		txtPlate.setFont(new Font("돋움", Font.BOLD, 20));
+		txtPlate.setBackground(Color.darkGray);
+		txtPlate.setHorizontalAlignment(JTextField.CENTER);
+		add(txtPlate);
+
+		// 플레이어 보유 금액 라벨
+		lblPlayerMoney = new JLabel();
+		lblPlayerMoney.setText("현재 보유 금액 : ");
+		lblPlayerMoney.setBounds(lblMoneyX, lblMoneyY, lblMoneyWidth, lblMoneyHeight);
+		lblPlayerMoney.setForeground(Color.white);
+		lblPlayerMoney.setFont(new Font("돋움", Font.BOLD, 20));
+		add(lblPlayerMoney);
+
+		// 플레이어 보유 금액 텍스트
+		txtPlayerMoney = new JTextField();
+		df = new DecimalFormat("#,###");
+		txtPlayerMoney.setText(df.format(playerDefaultMoney));
+		txtPlayerMoney.setEnabled(false);
+		txtPlayerMoney.setBounds(txtMoneyX, txtMoneyY, txtMoneyWidth, txtMoneyHeight);
+		txtPlayerMoney.setEditable(false);
+		txtPlayerMoney.setFont(new Font("돋움", Font.BOLD, 20));
+		txtPlayerMoney.setBackground(Color.darkGray);
+		txtPlayerMoney.setHorizontalAlignment(JTextField.CENTER);
+		add(txtPlayerMoney);
 	}
 
-	private void CreateComputerComponent() {
+	private void createComputerComponent() {
 		computerBtn = new JButton[7];
 
 		for (int i = 0; i < computerBtn.length; i++) {
 			computerBtn[i] = new JButton();
 			computerBtn[i].setBounds(btnComputerX + (btnWidth * i), btnComputerY, btnWidth, btnHeight);
-			computerBtn[i].setToolTipText("");
 			add(computerBtn[i]);
 		}
 
 		computerCardLabel = new JTextField();
-		computerCardLabel.setBounds(labelComputerCardX, labelComputerCardY, labelCardWidth, labelCardHeight);
+		computerCardLabel.setBounds(lblComputerCardX, lblComputerCardY, lblCardWidth, lblCardHeight);
 		computerCardLabel.setText("컴퓨터 카드");
 		computerCardLabel.setHorizontalAlignment(JTextField.CENTER);
 		computerCardLabel.setEnabled(false);
 		add(computerCardLabel);
 	}
 
-	private void CreatePlayerComponent() {
+	private void createPlayerComponent() {
 		playerBtn = new JButton[7];
 		for (int i = 0; i < playerBtn.length; i++) {
 			playerBtn[i] = new JButton();
 			playerBtn[i].setBounds(btnPlayerX + (btnWidth * i), btnPlayerY, btnWidth, btnHeight);
-			playerBtn[i].setToolTipText("");
 			add(playerBtn[i]);
 		}
 
 		playerCardLabel = new JTextField();
-		playerCardLabel.setBounds(labelPlayCardX, labelPlayCardY, labelCardWidth, labelCardHeight);
+		playerCardLabel.setBounds(lblPlayCardX, lblPlayCardY, lblCardWidth, lblCardHeight);
 		playerCardLabel.setText("플레이어 카드");
 		playerCardLabel.setHorizontalAlignment(JTextField.CENTER);
 		playerCardLabel.setEnabled(false);
 		add(playerCardLabel);
 
-//		콜	앞 사람의 베팅 금액과 동일한 베팅 금액을 겁니다.
-//		삥	삥	기본 판돈만 베팅합니다.(보스만 가능)
-//		따당	앞사람이 베팅 한 금액의 2배를 베팅합니다.
 //		하프	전체 판돈의 절반, 즉 50% 금액을 베팅합니다.
 //		다이	새로 베팅하지 않고, 이번 판을 포기합니다.
 //		체크	머니를 베팅하지 않고 다음 카드를 받습니다.(보스만 가능)
-//		Call("콜"), Bbing("삥"), Tadang("따당"), Half("하프"), Die("다이"), Check("체크");
-//			0			1			2				3			4			5
-		raiseBtn = new JButton[6];
+//		Half("하프"), Die("다이"), Check("체크");
+//			0			1			2
+		raiseBtn = new JButton[3];
 		for (int i = 0; i < raiseBtn.length; i++) {
 			String btnName = "";
 			raiseBtn[i] = new JButton();
-			if (i == RaiseType.Call.ordinal()) {
-				btnName = RaiseType.Call.value;
-				raiseBtn[i].setName(RaiseType.Call.name());
-			} else if (i == RaiseType.Bbing.ordinal()) {
-				btnName = RaiseType.Bbing.value;
-				raiseBtn[i].setName(RaiseType.Bbing.name());
-			} else if (i == RaiseType.Tadang.ordinal()) {
-				btnName = RaiseType.Tadang.value;
-				raiseBtn[i].setName(RaiseType.Tadang.name());
-			} else if (i == RaiseType.Half.ordinal()) {
+			if (i == RaiseType.Half.ordinal()) {
 				btnName = RaiseType.Half.value;
 				raiseBtn[i].setName(RaiseType.Half.name());
 			} else if (i == RaiseType.Die.ordinal()) {
@@ -186,17 +236,25 @@ public class Board extends JPanel {
 			raiseBtn[i].setText(btnName);
 			raiseBtn[i].setBounds(btnRaiseX + (i * btnRaiseGapX), btnRaiseY, btnRaiseWidth, btnRaiseHeight);
 			raiseBtn[i].setEnabled(false);
-			raiseBtn[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (e.getActionCommand() == RaiseType.Die.value) {
-						gui.resetBoard();
-					} else {
-						gui.cardSpread(true, 1);
-					}
-				}
-			});
+			raiseBtn[i].addActionListener(listener);
 			add(raiseBtn[i]);
 		}
+	}
+
+	private void createBtnListener() {
+		listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String raiseType = e.getActionCommand();
+				if (raiseType.equals(RaiseType.Half.value)) {
+					gui.bet(RaiseType.Half.value);
+				} else if (raiseType.equals(RaiseType.Die.value)) {
+					resetBoard();
+					gui.setNoticeText("");
+				} else if (raiseType.equals(RaiseType.Check.value)) {
+					gui.cardSpread(1);
+				}
+			}
+		};
 	}
 }

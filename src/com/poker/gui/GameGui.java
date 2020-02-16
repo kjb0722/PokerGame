@@ -1,8 +1,12 @@
 package com.poker.gui;
 
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.poker.emun.CardHandType;
+import com.poker.game.Card;
 import com.poker.game.GamePlay;
 import com.poker.game.Rank;
 
@@ -25,11 +29,10 @@ public class GameGui extends JFrame {
 
 	public void resetBoard() {
 		board.resetBoard();
-		menu.resetMenu();
 	}
 
-	public void cardSpread(boolean bet, int count) {
-		play.cardSpread(bet, count);
+	public void cardSpread(int count) {
+		play.cardSpread(count);
 	}
 
 	public void resetRaiseBtn() {
@@ -53,6 +56,10 @@ public class GameGui extends JFrame {
 		setVisible(true);
 	}
 
+	public void resetPlayerMoney() {
+		board.resetPlayerMoney();
+	}
+	
 	public JButton[] getComputerBtn() {
 		return board.getComputerBtn();
 	}
@@ -73,11 +80,35 @@ public class GameGui extends JFrame {
 		menu.setNoticeText(string);
 	}
 
-	public String rankCheck(String[] hand) {
-		return rank.Checker(hand);
+	public CardHandType rankCheck(ArrayList<Card> card) {
+		return rank.Checker(card);
 	}
 
 	public Board getBoard() {
 		return board;
+	}
+
+	public void bet(String betType) {
+		play.bet(betType);
+	}
+
+	public String getTxtPlate() {
+		return board.getTxtPlate();
+	}
+	
+	public void setTxtPlate(String text) {
+		board.setTxtPlate(text);
+	}
+
+	public String getTxtPlayerMoney() {
+		return board.getTxtPlayerMoney();
+	}
+	
+	public void setTxtPlayerMoney(String text) {
+		board.setTxtPlayerMoney(text);
+	}
+
+	public int getBetDefaultMoney() {
+		return board.getBetDefaultMoney();
 	}
 }

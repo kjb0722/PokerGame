@@ -23,8 +23,9 @@ public class MenuPanel extends JPanel {
 	private int txtNoticeX = 755;
 	private int txtNoticeY = 5;
 	private JButton[] menuBtn;
-	private JTextArea noticeText;
+	private JTextArea txtNotice;
 	private JScrollPane noticeScroll;
+	private ActionListener listener;
 	private GameGui gui;
 
 	MenuPanel(GameGui gui) {
@@ -33,17 +34,12 @@ public class MenuPanel extends JPanel {
 		init();
 	}
 
-	public void resetMenu() {
-		noticeText.setText("");
-		enableMenuBtn(true);
-	}
-
 	public void setNoticeText(String text) {
-		this.noticeText.setText(text);
+		this.txtNotice.setText(text);
 	}
 
 	public String getNoticeText() {
-		return noticeText.getText();
+		return txtNotice.getText();
 	}
 
 	private void init() {
@@ -58,9 +54,9 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void createNoticeText() {
-		noticeText = new JTextArea();
-		noticeText.setFont(new Font("µ∏øÚ", Font.BOLD, 15));
-		noticeScroll = new JScrollPane(noticeText);
+		txtNotice = new JTextArea();
+		txtNotice.setFont(new Font("µ∏øÚ", Font.BOLD, 15));
+		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
 		noticeScroll.setEnabled(false);
 		add(noticeScroll);
@@ -105,12 +101,14 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void gameRun() {
+		txtNotice.setText(txtNotice.getText()+"[∞‘¿” Ω√¿€]\n");
 		gui.gameRun();
 		enableMenuBtn(false);
 	}
 
 	private void resetBoard() {
 		gui.resetBoard();
+		gui.resetPlayerMoney();
 		enableMenuBtn(true);
 	}
 

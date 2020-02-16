@@ -1,25 +1,28 @@
 package com.poker.game;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
+import com.poker.emun.CardHandType;
 import com.poker.emun.NumberType;
+import com.poker.emun.RaiseType;
 import com.poker.emun.SuitType;
 import com.poker.gui.GameGui;
 
 public class GamePlay {
-	private String[] suits = { "hearts", "clubs", "spades", "diamonds" };
-	private String[] numbers = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace" };
 	private ArrayList<Card> cards;
+	private ArrayList<Card> computerCard;
+	private ArrayList<Card> playerCard;
 	private GameGui gui;
 	private JButton[] computerBtn;
 	private JButton[] playerBtn;
 	private JButton[] raiseBtn;
+	private DecimalFormat df;
 
 	public GamePlay(GameGui gui) {
 		this.gui = gui;
@@ -28,6 +31,11 @@ public class GamePlay {
 		this.raiseBtn = gui.getRaiseBtn();
 
 		cards = new ArrayList<Card>();
+		computerCard = new ArrayList<Card>();
+		playerCard = new ArrayList<Card>();
+
+		df = new DecimalFormat("#,###");
+
 		createCards();
 		shuffle();
 	}
@@ -37,18 +45,41 @@ public class GamePlay {
 	}
 
 	private void createCards() {
-		for(SuitType suits : SuitType.values()) {
+		for (SuitType suits : SuitType.values()) {
 			String suit = suits.name();
-			for(NumberType numbers : NumberType.values()) {
-				String number = Integer.toString(numbers.getNumber());
-				cards.add(new Card(suit, number));
+			for (NumberType numbers : NumberType.values()) {
+				cards.add(new Card(suit, numbers.name(), numbers.getNumber()));
+
 			}
 		}
 	}
 
 	public void gamePlay() {
-		cardSpread(false, 3);
+		// 카드 돌리기(배팅 여부, 카드 개수)
+		cardSpread(3);
+		bet(gui.getBetDefaultMoney());
 		raiseBtnEnable();
+	}
+
+	private void bet(int betMoney) {
+		//판 돈, 플레이어 보유 금액
+		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
+		int playerMoney = Integer.parseInt(gui.getTxtPlayerMoney().replace(",", ""));
+		
+		playerMoney -= betMoney;
+		plateMoney += betMoney;
+		gui.setTxtPlate(df.format(plateMoney));
+		gui.setTxtPlayerMoney(df.format(playerMoney));
+	}
+
+	public void bet(String betType) {
+		if (betType.equals(RaiseType.Half.value)) {
+			int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", "")) / 2;
+			bet(plateMoney);
+			cardSpread(1);
+		} else if (betType.equals(RaiseType.Check.name())) {
+			cardSpread(1);
+		}
 	}
 
 	private void raiseBtnEnable() {
@@ -57,22 +88,23 @@ public class GamePlay {
 		}
 	}
 
-	public void cardSpread(boolean bet, int count) {
-		int spreadCard = spreadCardCounting();
+	public void cardSpread(int count) {
+		int spreadCard = getSpreadStartIndex();
 
 		for (int i = spreadCard; i < spreadCard + count; i++) {
-			Card computerCard = cards.get(i);
-			computerBtn[i].setToolTipText(computerCard.getSuit() + "-" + computerCard.getNumber());
-			computerBtn[i]
-					.setIcon(new ImageIcon("img/" + computerCard.getSuit() + "-" + computerCard.getNumber() + ".png"));
-			computerBtn[i].setHorizontalTextPosition(SwingConstants.CENTER);
+			Card computerCard = cards.get(0);
+			this.computerCard.add(computerCard);
+			computerBtn[i].setIcon(
+					new ImageIcon("img/" + computerCard.getSuit() + "-" + computerCard.getNumberOrder() + ".png"));
+			computerBtn[i].setName(computerCard.getSuit() + "-" + computerCard.getNumber());
+			cards.remove(0);
 
-			cards.remove(i);
-
-			Card playerCard = cards.get(i);
-			playerBtn[i].setToolTipText(playerCard.getSuit() + "-" + playerCard.getNumber());
-			playerBtn[i].setIcon(new ImageIcon("img/" + playerCard.getSuit() + "-" + playerCard.getNumber() + ".png"));
-			cards.remove(i);
+			Card playerCard = cards.get(0);
+			this.playerCard.add(playerCard);
+			playerBtn[i]
+					.setIcon(new ImageIcon("img/" + playerCard.getSuit() + "-" + playerCard.getNumberOrder() + ".png"));
+			playerBtn[i].setName(playerCard.getSuit() + "-" + playerCard.getNumber());
+			cards.remove(0);
 		}
 
 		if (spreadCard == (playerBtn.length - 1)) {
@@ -80,38 +112,40 @@ public class GamePlay {
 			gui.resetRaiseBtn();
 
 			cardHandCheck();
+
+			gui.resetBoard();
+
+			gui.gameRun();
 		} else {
 			gui.setNoticeText(gui.getNoticeText() + "카드를 " + count + "장씩 돌립니다.\n");
-		}
-
-		if (bet) {
-			gui.setNoticeText(gui.getNoticeText() + "베팅해주세요.\n");
 		}
 	}
 
 	private void cardHandCheck() {
-		String s = gui.rankCheck(handCheck(computerBtn));
-		String ss = gui.rankCheck(handCheck(playerBtn));
+		CardHandType computerHand = gui.rankCheck(computerCard);
+		CardHandType playerHand = gui.rankCheck(playerCard);
 
-		JOptionPane.showMessageDialog(gui.getBoard(), "컴퓨터 패:" + s + "\n플레이어 패:" + ss);
+		String winner = "";
+
+		if (computerHand.number > playerHand.number) {
+			winner = "컴퓨터 승";
+		} else if (computerHand.number < playerHand.number) {
+			winner = "플레이어 승";
+		} else if (computerHand.number == playerHand.number) {
+			winner = "무승부";
+		}
+
+		JOptionPane.showMessageDialog(gui.getBoard(),
+				"컴퓨터 패:" + computerHand.name() + "\n플레이어 패:" + playerHand.name() + "\n" + winner);
 	}
 
-	private int spreadCardCounting() {
+	private int getSpreadStartIndex() {
 		for (int i = 0; i < computerBtn.length; i++) {
-			if (computerBtn[i].getToolTipText().equals("")) {
+			if (computerBtn[i].getName() == null || computerBtn[i].getName().equals("")) {
 				return i;
 			}
 		}
 
 		return -1;
-	}
-
-	private String[] handCheck(JButton[] btn) {
-		String[] hand = new String[btn.length];
-		for (int i = 0; i < btn.length; i++) {
-			hand[i] = btn[i].getToolTipText();
-		}
-
-		return hand;
 	}
 }
