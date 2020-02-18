@@ -15,17 +15,16 @@ import com.poker.emun.MenuType;
 public class MenuPanel extends JPanel {
 	private final int btnWidth = 150;
 	private final int btnHeight = 50;
-	private int btnX = 800;
-	private int btnY = 250;
-	private int btnGapY = 65;
-	private int txtNoticeWidth = 235;
-	private int txtNoticeHeight = 270;
-	private int txtNoticeX = 755;
-	private int txtNoticeY = 5;
+	private final int btnX = 800;
+	private final int btnY = 250;
+	private final int btnGapY = 65;
+	private final int txtNoticeWidth = 235;
+	private final int txtNoticeHeight = 270;
+	private final int txtNoticeX = 755;
+	private final int txtNoticeY = 5;
 	private JButton[] menuBtn;
 	private JTextArea txtNotice;
 	private JScrollPane noticeScroll;
-	private ActionListener listener;
 	private GameGui gui;
 
 	MenuPanel(GameGui gui) {
@@ -34,11 +33,11 @@ public class MenuPanel extends JPanel {
 		init();
 	}
 
-	public void setNoticeText(String text) {
-		this.txtNotice.setText(text);
+	public void setTxtNotice(String text) {
+		this.txtNotice.setText(txtNotice.getText()+text+"\n");
 	}
 
-	public String getNoticeText() {
+	public String getTxtNotice() {
 		return txtNotice.getText();
 	}
 
@@ -49,13 +48,13 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void createComponent() {
-		createNoticeText();
+		createTxtNotice();
 		createBtn();
 	}
 
-	private void createNoticeText() {
+	private void createTxtNotice() {
 		txtNotice = new JTextArea();
-		txtNotice.setFont(new Font("µ∏øÚ", Font.BOLD, 15));
+		txtNotice.setFont(new Font("µ∏øÚ", Font.BOLD, 12));
 		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
 		noticeScroll.setEnabled(false);
@@ -101,19 +100,27 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void gameRun() {
-		txtNotice.setText(txtNotice.getText() + "[∞‘¿” Ω√¿€]\n");
 		gui.gameRun();
-		enableMenuBtn(false);
+		enableMenuBtn();
 	}
 
 	private void resetBoard() {
 		gui.resetBoard();
 		gui.resetPlayerMoney();
-		enableMenuBtn(true);
+		enableMenuBtn();
 	}
 
-	public void enableMenuBtn(boolean enable) {
-		menuBtn[MenuType.start.ordinal()].setEnabled(enable);
-		menuBtn[MenuType.reset.ordinal()].setEnabled(!enable);
+	public void enableMenuBtn() {
+		if (menuBtn[MenuType.start.getNumber()].isEnabled()) {
+			menuBtn[MenuType.start.getNumber()].setEnabled(false);
+		} else {
+			menuBtn[MenuType.start.getNumber()].setEnabled(true);
+		}
+
+		if (menuBtn[MenuType.reset.getNumber()].isEnabled()) {
+			menuBtn[MenuType.reset.getNumber()].setEnabled(false);
+		} else {
+			menuBtn[MenuType.reset.getNumber()].setEnabled(true);
+		}
 	}
 }

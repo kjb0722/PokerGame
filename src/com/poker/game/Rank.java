@@ -8,19 +8,12 @@ import com.poker.emun.CardHandType;
 import com.poker.emun.SuitType;
 
 public class Rank {
-	ArrayList<Card> hands;
+	List<Card> hands;
 
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 마운틴 -모든 무늬가 같지는 않고 10, J, Q, K, A가 연달아 있는 패
-	 * 
-	 */
-	public CardHandType Checker(ArrayList<Card> handCard) {
+	public CardHandType Checker(List<Card> handCard) {
 		hands = handCard;
 
+		// 정렬
 		handSort();
 
 		if (royalStraightFlush()) {
@@ -48,6 +41,7 @@ public class Rank {
 		}
 	}
 
+	// 카드 정렬
 	private void handSort() {
 		for (int i = 0; i < hands.size(); i++) {
 			for (int j = (i + 1); j < hands.size(); j++) {
@@ -63,6 +57,24 @@ public class Rank {
 				}
 			}
 		}
+	}
+
+	public Card tieCheck(List<Card> playerCard, CardHandType playerHandType) {
+		Card bestCard = new Card("", "", 1);
+
+		if (playerHandType.getNumber() == CardHandType.스트레이트플러쉬.getNumber()
+				|| playerHandType.getNumber() == CardHandType.포카드.getNumber()
+				|| playerHandType.getNumber() == CardHandType.풀하우스.getNumber()
+				|| playerHandType.getNumber() == CardHandType.플러쉬.getNumber()
+				|| playerHandType.getNumber() == CardHandType.마운틴.getNumber()) {
+			bestHandCheck(playerCard);
+		}
+
+		return bestCard;
+	}
+
+	private void bestHandCheck(List<Card> playerCard) {
+		
 	}
 
 	// 원 페어 -5장의 카드 중에서 2장의 숫자가 같은 패
@@ -121,12 +133,23 @@ public class Rank {
 		return false;
 	}
 
+	// 마운틴 - 모든 무늬가 같지는 않고 10, J, Q, K, A가 연달아 있는 패
 	private boolean mountain() {
+		int startNumber = 10;
+		for (Card card : hands) {
+			if (card.getNumberOrder() == startNumber) {
+				startNumber++;
+			}
+
+			if (startNumber >= 5) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	// 플러쉬 -카드 5장 모두 무늬가 같은 패
-	private boolean flush() { 
+	private boolean flush() {
 		for (int i = 0; i < hands.size(); i++) {
 			int count = 0;
 			for (int j = 0; j < hands.size(); j++) {
@@ -172,15 +195,17 @@ public class Rank {
 
 	// 로얄 스트레이트 플러쉬 -카드 5장이 모두 무늬가 같으면서 10,J,Q,K,A 연달아 있는 패
 	private boolean royalStraightFlush() {
-		if (straightFlush()) {
+		int startNumber = 10;
+		if (flush()) {
 			int spadesCount = 0;
 			for (Card card : hands) {
-				if (card.getSuit().equals(SuitType.spades.name())) {
+				if (card.getSuit().equals(SuitType.spades.name()) && card.getNumberOrder() == startNumber) {
+					startNumber++;
 					spadesCount++;
 				}
 			}
 
-			if (spadesCount >= 5) {
+			if (spadesCount >= 5 && startNumber >= 5) {
 				return true;
 			}
 		}

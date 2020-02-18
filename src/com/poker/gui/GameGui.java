@@ -72,12 +72,12 @@ public class GameGui extends JFrame {
 		return board.getRaiseBtn();
 	}
 
-	public String getNoticeText() {
-		return menu.getNoticeText();
+	public String getTxtNotice() {
+		return menu.getTxtNotice();
 	}
 
-	public void setNoticeText(String string) {
-		menu.setNoticeText(string);
+	public void setTxtNotice(String text) {
+		menu.setTxtNotice(text);
 	}
 
 	public CardHandType rankCheck(ArrayList<Card> card) {
@@ -110,5 +110,29 @@ public class GameGui extends JFrame {
 
 	public int getBetDefaultMoney() {
 		return board.getBetDefaultMoney();
+	}
+
+	public void lastCardCheck() {
+		play.lastCardCheck();
+	}
+
+	public void raiseHalf() {
+		play.raiseHalf();
+	}
+
+	public void raiseDie() {
+		play.raiseDie();
+	}
+
+	public void resetCardBtn() {
+		board.resetCardBtn();
+	}
+
+	public void raiseCheck() {
+		play.raiseCheck();
+	}
+
+	public Card tieCheck(ArrayList<Card> playerCard, CardHandType playerHandType) {
+		return rank.tieCheck(playerCard, playerHandType);
 	}
 }

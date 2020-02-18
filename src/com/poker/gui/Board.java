@@ -49,6 +49,10 @@ public class Board extends JPanel {
 	private final int txtPlateY = 200;
 	private final int txtPlateWidth = 200;
 	private final int txtPlateHeight = 100;
+	private final int lblPlayerMoneyUnitX = 620;
+	private final int lblPlayerMoneyUnitY = 250;
+	private final int lblPlayerMoneyUnitWidth = 200;
+	private final int lblPlayerMoneyUnitHeight = 200;
 
 	private GameGui gui;
 	private JButton[] computerBtn;
@@ -58,13 +62,14 @@ public class Board extends JPanel {
 	private JButton[] raiseBtn;
 	private JLabel lblPlayerMoney;
 	private JTextField txtPlayerMoney;
+	private JLabel lblPlayerMoneyUnit;
 	private JLabel lblPlate;
 	private JTextField txtPlate;
 	private DecimalFormat df;
-	private int playerDefaultMoney = 1000000;
+	private int playerDefaultMoney = 100000;
 	private int betDefaultMoney = 1000;
 	private ActionListener listener;
- 
+
 	public Board(GameGui gui) {
 		this.gui = gui;
 		init();
@@ -154,7 +159,6 @@ public class Board extends JPanel {
 		txtPlate.setText(df.format(0));
 		txtPlate.setEnabled(false);
 		txtPlate.setBounds(txtPlateX, txtPlateY, txtPlateWidth, txtPlateHeight);
-		txtPlate.setEditable(false);
 		txtPlate.setFont(new Font("µ¸¿ò", Font.BOLD, 20));
 		txtPlate.setBackground(Color.darkGray);
 		txtPlate.setHorizontalAlignment(JTextField.CENTER);
@@ -174,11 +178,19 @@ public class Board extends JPanel {
 		txtPlayerMoney.setText(df.format(playerDefaultMoney));
 		txtPlayerMoney.setEnabled(false);
 		txtPlayerMoney.setBounds(txtMoneyX, txtMoneyY, txtMoneyWidth, txtMoneyHeight);
-		txtPlayerMoney.setEditable(false);
 		txtPlayerMoney.setFont(new Font("µ¸¿ò", Font.BOLD, 20));
 		txtPlayerMoney.setBackground(Color.darkGray);
 		txtPlayerMoney.setHorizontalAlignment(JTextField.CENTER);
 		add(txtPlayerMoney);
+
+		//"¿ø"
+		lblPlayerMoneyUnit = new JLabel();
+		lblPlayerMoneyUnit.setText("¿ø");
+		lblPlayerMoneyUnit.setBounds(lblPlayerMoneyUnitX, lblPlayerMoneyUnitY, lblPlayerMoneyUnitHeight,
+				lblPlayerMoneyUnitWidth);
+		lblPlayerMoneyUnit.setFont(new Font("µ¸¿ò", Font.BOLD, 20));
+		lblPlayerMoneyUnit.setForeground(Color.white);
+		add(lblPlayerMoneyUnit);
 	}
 
 	private void createComputerComponent() {
@@ -247,12 +259,11 @@ public class Board extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String raiseType = e.getActionCommand();
 				if (raiseType.equals(RaiseType.Half.value)) {
-					gui.bet(RaiseType.Half.value);
+					gui.raiseHalf();
 				} else if (raiseType.equals(RaiseType.Die.value)) {
-					resetBoard();
-					gui.setNoticeText("");
+					gui.raiseDie();
 				} else if (raiseType.equals(RaiseType.Check.value)) {
-					gui.cardSpread(1);
+					gui.raiseCheck();
 				}
 			}
 		};
