@@ -34,7 +34,7 @@ public class MenuPanel extends JPanel {
 	}
 
 	public void setTxtNotice(String text) {
-		this.txtNotice.setText(txtNotice.getText()+text+"\n");
+		this.txtNotice.setText(txtNotice.getText() + text + "\n");
 	}
 
 	public String getTxtNotice() {

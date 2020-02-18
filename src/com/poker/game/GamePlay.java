@@ -199,23 +199,22 @@ public class GamePlay {
 		CardHandType computerHandType = gui.rankCheck(computerCard);
 		CardHandType playerHandType = gui.rankCheck(playerCard);
 
+		String computerHand = computerHandType.name();
+		String playerHand = playerHandType.name();
 		String winner = "";
-
-		if (computerHandType.getNumber() == playerHandType.getNumber()) {
-			Card computerBestHand = gui.tieCheck(computerCard, computerHandType);
-			Card playerBestHand = gui.tieCheck(playerCard, playerHandType);
-			winner = "무승부";
-		}
 
 		if (computerHandType.getNumber() > playerHandType.getNumber()) {
 			winner = "컴퓨터 승";
 		} else if (computerHandType.getNumber() < playerHandType.getNumber()) {
 			winner = "플레이어 승";
 			takeMoney();
+		} else {
+			winner = "무승부";
+			drawMoney();
 		}
 
 		JOptionPane.showMessageDialog(gui.getBoard(),
-				"컴퓨터 패:" + computerHandType.name() + "\n플레이어 패:" + playerHandType.name() + "\n" + winner);
+				"컴퓨터 패:" + computerHand + "\n플레이어 패:" + playerHand + "\n" + winner);
 		gui.setTxtNotice("[" + winner + "]");
 	}
 
@@ -227,6 +226,12 @@ public class GamePlay {
 		}
 
 		return -1;
+	}
+
+	private void drawMoney() {
+		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
+		int playerMoney = plateMoney / 2;
+		gui.setTxtPlayerMoney(df.format(playerMoney));
 	}
 
 	private void takeMoney() {

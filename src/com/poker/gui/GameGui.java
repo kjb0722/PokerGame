@@ -1,6 +1,7 @@
 package com.poker.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -130,9 +131,5 @@ public class GameGui extends JFrame {
 
 	public void raiseCheck() {
 		play.raiseCheck();
-	}
-
-	public Card tieCheck(ArrayList<Card> playerCard, CardHandType playerHandType) {
-		return rank.tieCheck(playerCard, playerHandType);
 	}
 }

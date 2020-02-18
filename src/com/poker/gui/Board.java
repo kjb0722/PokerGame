@@ -183,7 +183,7 @@ public class Board extends JPanel {
 		txtPlayerMoney.setHorizontalAlignment(JTextField.CENTER);
 		add(txtPlayerMoney);
 
-		//"¿ø"
+		// "¿ø"
 		lblPlayerMoneyUnit = new JLabel();
 		lblPlayerMoneyUnit.setText("¿ø");
 		lblPlayerMoneyUnit.setBounds(lblPlayerMoneyUnitX, lblPlayerMoneyUnitY, lblPlayerMoneyUnitHeight,

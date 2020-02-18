@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.poker.emun.CardHandType;
 import com.poker.emun.SuitType;
 
 public class Rank {
-	List<Card> hands;
+	ArrayList<Card> hands;
 
-	public CardHandType Checker(List<Card> handCard) {
+	public CardHandType Checker(ArrayList<Card> handCard) {
 		hands = handCard;
 
 		// 정렬
@@ -57,24 +59,6 @@ public class Rank {
 				}
 			}
 		}
-	}
-
-	public Card tieCheck(List<Card> playerCard, CardHandType playerHandType) {
-		Card bestCard = new Card("", "", 1);
-
-		if (playerHandType.getNumber() == CardHandType.스트레이트플러쉬.getNumber()
-				|| playerHandType.getNumber() == CardHandType.포카드.getNumber()
-				|| playerHandType.getNumber() == CardHandType.풀하우스.getNumber()
-				|| playerHandType.getNumber() == CardHandType.플러쉬.getNumber()
-				|| playerHandType.getNumber() == CardHandType.마운틴.getNumber()) {
-			bestHandCheck(playerCard);
-		}
-
-		return bestCard;
-	}
-
-	private void bestHandCheck(List<Card> playerCard) {
-		
 	}
 
 	// 원 페어 -5장의 카드 중에서 2장의 숫자가 같은 패
@@ -141,7 +125,7 @@ public class Rank {
 				startNumber++;
 			}
 
-			if (startNumber >= 5) {
+			if (startNumber >= 15) {
 				return true;
 			}
 		}

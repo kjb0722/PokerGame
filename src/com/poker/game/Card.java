@@ -10,7 +10,7 @@ public class Card {
 		this.number = number;
 		this.numberOrder = numberOrder;
 	}
- 
+
 	public String getSuit() {
 		return suit;
 	}
@@ -18,7 +18,7 @@ public class Card {
 	public String getNumber() {
 		return number;
 	}
-	
+
 	public int getNumberOrder() {
 		return numberOrder;
 	}
