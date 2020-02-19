@@ -13,7 +13,7 @@ public class Rank {
 	public void Checker(Player player) {
 		this.player = player;
 		this.hands = player.getArrayCard();
-		
+
 		// Á¤·Ä
 		handSort();
 
@@ -69,6 +69,7 @@ public class Rank {
 				int num2 = hands.get(j).getNumberOrder();
 				if (num1 == num2) {
 					count++;
+					player.setBestCard(hands.get(i));
 					break;
 				}
 			}
@@ -90,6 +91,7 @@ public class Rank {
 				int num2 = hands.get(j).getNumberOrder();
 				if (num1 == num2) {
 					count++;
+					player.setBestCard(hands.get(j));
 				}
 				if (count >= 3) {
 					return true;
@@ -106,9 +108,12 @@ public class Rank {
 			if (i + 1 >= hands.size()) {
 				break;
 			}
+
 			if (hands.get(i).getNumberOrder() + 1 == hands.get(i + 1).getNumberOrder()) {
 				count++;
+				player.setBestCard(hands.get(i + 1));
 			}
+
 			if (count >= 5) {
 				return true;
 			}
@@ -122,6 +127,7 @@ public class Rank {
 		for (Card card : hands) {
 			if (card.getNumberOrder() == startNumber) {
 				startNumber++;
+				player.setBestCard(card);
 			}
 
 			if (startNumber >= 15) {
@@ -138,7 +144,9 @@ public class Rank {
 			for (int j = 0; j < hands.size(); j++) {
 				if (hands.get(i).getSuit().equals(hands.get(j).getSuit())) {
 					count++;
+					player.setBestCard(hands.get(j));
 				}
+
 				if (count >= 5) {
 					return true;
 				}
@@ -160,9 +168,12 @@ public class Rank {
 			int num1 = hands.get(i).getNumberOrder();
 			for (int j = 0; j < hands.size(); j++) {
 				int num2 = hands.get(j).getNumberOrder();
+
 				if (num1 == num2) {
 					count++;
+					player.setBestCard(hands.get(j));
 				}
+
 				if (count >= 4) {
 					return true;
 				}
@@ -185,10 +196,11 @@ public class Rank {
 				if (card.getSuit().equals(SuitType.spades.name()) && card.getNumberOrder() == startNumber) {
 					startNumber++;
 					spadesCount++;
+					player.setBestCard(card);
 				}
 			}
 
-			if (spadesCount >= 5 && startNumber >= 5) {
+			if (spadesCount >= 5 && startNumber >= 15) {
 				return true;
 			}
 		}

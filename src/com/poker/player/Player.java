@@ -6,16 +6,27 @@ import com.poker.emun.CardHandType;
 import com.poker.game.Card;
 
 public class Player {
+	public final int CARD_TOTAL_COUNT = 7;
+	
 	String name;
 	int money;
 	ArrayList<Card> card;
 	CardHandType hand;
+	private Card bestCard;
 
 	public Player(String name, int money) {
 		this.name = name;
 		this.money = money;
 
 		this.card = new ArrayList<Card>();
+	}
+
+	public Card getBestCard() {
+		return bestCard;
+	}
+
+	public void setBestCard(Card bestCard) {
+		this.bestCard = bestCard;
 	}
 
 	public CardHandType getHand() {

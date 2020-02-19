@@ -119,7 +119,7 @@ public class GamePlay {
 			return false;
 		}
 
-		// 100원 단위 금액은 돌려줌
+		// 100원 단위 금액 짜르기
 		int change = betMoney % 100;
 		betMoney -= change;
 
@@ -142,10 +142,14 @@ public class GamePlay {
 			}
 			plateHalfMoney = Integer.parseInt(gui.getTxtPlate().replace(",", "")) / 2;
 			betComputer(plateHalfMoney);
-			cardSpread(1);
-		} else if (betType.equals(RaiseType.Check.value)) {
-			cardSpread(1);
 		}
+//		else if (betType.equals(RaiseType.Check.value)) {
+//
+//		}
+		if (lastCardCheck()) {
+			return;
+		}
+		cardSpread(1);
 	}
 
 	private void btnRaiseEnable() {
@@ -180,7 +184,7 @@ public class GamePlay {
 			computerCardLbl[i].setName(card2.getSuit() + "-" + card2.getNumberOrder());
 
 			// 컴퓨터는 두번째, 세번째, 마지막 카드는 오픈 안함
-			if (i == 1 || i == 2 || i == (player[1].getArrayCard().size())) {
+			if (i == 1 || i == 2 || i == (player[1].CARD_TOTAL_COUNT-1)) {
 				btnImageInsert(computerCardLbl[i], "back");
 			} else {
 				btnImageInsert(computerCardLbl[i], card2.getSuit(), card2.getNumberOrder());
@@ -189,9 +193,9 @@ public class GamePlay {
 		}
 	}
 
-	public void lastCardCheck() {
+	public boolean lastCardCheck() {
 		int spreadCard = getSpreadCardIndex();
-		if (spreadCard == 7) {
+		if (spreadCard == player[0].CARD_TOTAL_COUNT) {
 			gui.setTxtNotice("마지막 카드를 돌렸습니다.");
 
 			// 가려진 컴퓨터 카드 이미지 open
@@ -208,13 +212,14 @@ public class GamePlay {
 			if (moneyCheck == 0) {
 				// 다음 게임 시작
 				gamePlay();
+				return true;
 			} else if (moneyCheck == 1) {
 				JOptionPane.showMessageDialog(gui.getBoard(), "더 이상 베팅을 하실 수 없습니다.");
 			} else if (moneyCheck == 2) {
 				JOptionPane.showMessageDialog(gui.getBoard(), "컴퓨터가 돈이 없습니다.");
 			}
-
 		}
+		return false;
 	}
 
 	private int playMoneyCheck(int betMoney) {
@@ -245,15 +250,39 @@ public class GamePlay {
 		CardHandType computerHand = player[1].getHand();
 
 		String winner = "";
-		if (playerHand.getNumber() > computerHand.getNumber()) {
+		if (playerHand.getNumber() < computerHand.getNumber()) {
+			takePlayerMoney();
 			winner = "컴퓨터 승";
-		} else if (playerHand.getNumber() < computerHand.getNumber()) {
+		} else if (playerHand.getNumber() > computerHand.getNumber()) {
+			takeComputerMoney();
 			winner = "플레이어 승";
+		} else {
+			drawMoney();
+			winner = "무승부";
 		}
 
-		JOptionPane.showMessageDialog(gui.getBoard(),
-				"컴퓨터 카드:" + computerHand + "\n플레이어 카드:" + playerHand + "\n" + winner);
+		String playerSymbol = suitSymbol(player[0].getBestCard().getSuit());
+		String computerSymbol = suitSymbol(player[1].getBestCard().getSuit());
+		StringBuilder msg = new StringBuilder();
+		msg.append("컴퓨터 카드:" + computerHand + "(" + computerSymbol + player[1].getBestCard().getNumber() + ")\n");
+		msg.append("플레이어 카드:" + playerHand + "(" + playerSymbol + player[0].getBestCard().getNumber() + ")\n");
+		msg.append("승자:" + winner + "\n");
+
+		JOptionPane.showMessageDialog(gui.getBoard(), msg);
 		gui.setTxtNotice("[" + winner + "]");
+	}
+
+	private String suitSymbol(String suit) {
+		if (suit.equals(SuitType.hearts.name())) {
+			return "♥";
+		} else if (suit.equals(SuitType.clubs.name())) {
+			return "♣";
+		} else if (suit.equals(SuitType.spades.name())) {
+			return "♠";
+		} else if (suit.equals(SuitType.diamonds.name())) {
+			return "◆";
+		}
+		return "";
 	}
 
 	private int getSpreadCardIndex() {
@@ -262,21 +291,30 @@ public class GamePlay {
 
 	private void drawMoney() {
 		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
-		int playerMoney = Integer.parseInt(gui.getTxtPlayerMoney().replace(",", "")) + (plateMoney / 2);
-		int computerMoney = Integer.parseInt(gui.getTxtComputerMoney().replace(",", "")) + plateMoney / 2;
+		int playerMoney = player[0].getMoney() + (plateMoney / 2);
+		int computerMoney = player[1].getMoney() + plateMoney / 2;
+		player[0].setMoney(playerMoney);
+		player[1].setMoney(computerMoney);
 		gui.setTxtPlayerMoney(df.format(playerMoney));
 		gui.setTxtComputerMoney(df.format(computerMoney));
 	}
 
-	private void takeMoney() {
+	private void takePlayerMoney() {
 		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
-		int playerMoney = Integer.parseInt(gui.getTxtPlayerMoney().replace(",", ""));
-		gui.setTxtPlayerMoney(df.format(plateMoney + playerMoney));
+		int playerMoney = player[0].getMoney() + plateMoney;
+		player[0].setMoney(playerMoney);
+		gui.setTxtPlayerMoney(df.format(player[0].getMoney()));
+	}
+
+	private void takeComputerMoney() {
+		int plateMoney = Integer.parseInt(gui.getTxtPlate().replace(",", ""));
+		int computerMoney = player[1].getMoney() + plateMoney;
+		player[1].setMoney(computerMoney);
+		gui.setTxtComputerMoney(df.format(player[1].getMoney()));
 	}
 
 	public void raiseHalf() {
 		bet(RaiseType.Half.value);
-		lastCardCheck();
 	}
 
 	public void raiseDie() {

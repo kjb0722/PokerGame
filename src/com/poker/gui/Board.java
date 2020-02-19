@@ -188,9 +188,7 @@ public class Board extends JPanel {
 		setLayout(null);
 		df = new DecimalFormat("#,###");
 
-		player = new Player[2];
-		player[0] = new Player("player1", playerDefaultMoney);
-		player[1] = new Player("computer", computerDefaultMoney);
+		resetPlayer();
 
 		createBtnListener();
 		createComputerComponent();
@@ -358,6 +356,7 @@ public class Board extends JPanel {
 	}
 
 	public void resetPlayer() {
+		player = new Player[2];
 		player[0] = new Player("player1", playerDefaultMoney);
 		player[1] = new Player("computer", computerDefaultMoney);
 	}
