@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import com.poker.emun.RaiseType;
+import com.poker.player.Player;
 
 public class Board extends JPanel {
 	private final int panelWidth = GameGui.WIDTH - 250; // 패널
@@ -102,9 +103,15 @@ public class Board extends JPanel {
 	private JLayeredPane jpComputerCard;
 	private JLayeredPane jpPlayerCard;
 
+	private Player[] player;
+
 	public Board(GameGui gui) {
 		this.gui = gui;
 		init();
+	}
+
+	public Player[] getPlayer() {
+		return player;
 	}
 
 	public int getBetDefaultMoney() {
@@ -180,6 +187,11 @@ public class Board extends JPanel {
 		setBackground(Color.DARK_GRAY);
 		setLayout(null);
 		df = new DecimalFormat("#,###");
+
+		player = new Player[2];
+		player[0] = new Player("player1", playerDefaultMoney);
+		player[1] = new Player("computer", computerDefaultMoney);
+
 		createBtnListener();
 		createComputerComponent();
 		createPlayerComponent();
@@ -303,7 +315,7 @@ public class Board extends JPanel {
 
 //		하프	전체 판돈의 절반, 즉 50% 금액을 베팅합니다.
 //		다이	새로 베팅하지 않고, 이번 판을 포기합니다.
-//		체크	머니를 베팅하지 않고 다음 카드를 받습니다.(보스만 가능)
+//		체크	머니를 베팅하지 않고 다음 카드를 받습니다.
 //		Half("하프"), Die("다이"), Check("체크");
 //			0			1			2
 		raiseBtn = new JButton[3];
@@ -343,5 +355,10 @@ public class Board extends JPanel {
 				}
 			}
 		};
+	}
+
+	public void resetPlayer() {
+		player[0] = new Player("player1", playerDefaultMoney);
+		player[1] = new Player("computer", computerDefaultMoney);
 	}
 }

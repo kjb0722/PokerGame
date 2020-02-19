@@ -22,6 +22,7 @@ public class MenuPanel extends JPanel {
 	private final int txtNoticeHeight = 270;
 	private final int txtNoticeX = 755;
 	private final int txtNoticeY = 5;
+	
 	private JButton[] menuBtn;
 	private JTextArea txtNotice;
 	private JScrollPane noticeScroll;
@@ -105,6 +106,7 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void resetBoard() {
+		gui.resetPlayer();
 		gui.resetBoard();
 		gui.resetPlayerMoney();
 		enableMenuBtn();

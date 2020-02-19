@@ -1,45 +1,44 @@
 package com.poker.game;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import com.poker.emun.CardHandType;
 import com.poker.emun.SuitType;
+import com.poker.player.Player;
 
 public class Rank {
 	ArrayList<Card> hands;
+	Player player;
 
-	public CardHandType Checker(ArrayList<Card> handCard) {
-		hands = handCard;
-
+	public void Checker(Player player) {
+		this.player = player;
+		this.hands = player.getArrayCard();
+		
 		// 정렬
 		handSort();
 
 		if (royalStraightFlush()) {
-			return CardHandType.로얄스트레이트플러쉬;
+			player.setHand(CardHandType.로얄스트레이트플러쉬);
 		} else if (straightFlush()) {
-			return CardHandType.스트레이트플러쉬;
+			player.setHand(CardHandType.스트레이트플러쉬);
 		} else if (fourCard()) {
-			return CardHandType.포카드;
+			player.setHand(CardHandType.포카드);
 		} else if (fullHouse()) {
-			return CardHandType.풀하우스;
+			player.setHand(CardHandType.풀하우스);
 		} else if (flush()) {
-			return CardHandType.플러쉬;
+			player.setHand(CardHandType.플러쉬);
 		} else if (mountain()) {
-			return CardHandType.마운틴;
+			player.setHand(CardHandType.마운틴);
 		} else if (straight()) {
-			return CardHandType.스트레이트;
+			player.setHand(CardHandType.스트레이트);
 		} else if (threePair()) {
-			return CardHandType.트리플;
+			player.setHand(CardHandType.트리플);
 		} else if (twoPair()) {
-			return CardHandType.투페어;
+			player.setHand(CardHandType.투페어);
 		} else if (pair() == 1) {
-			return CardHandType.원페어;
+			player.setHand(CardHandType.원페어);
 		} else {
-			return CardHandType.노페어;
+			player.setHand(CardHandType.노페어);
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.poker.gui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,6 +10,7 @@ import com.poker.emun.CardHandType;
 import com.poker.game.Card;
 import com.poker.game.GamePlay;
 import com.poker.game.Rank;
+import com.poker.player.Player;
 
 public class GameGui extends JFrame {
 	static final int WIDTH = 1000;
@@ -19,7 +19,7 @@ public class GameGui extends JFrame {
 	private MenuPanel menu;
 	private GamePlay play;
 	private Rank rank;
-
+	
 	public GameGui() {
 		init();
 	}
@@ -82,8 +82,8 @@ public class GameGui extends JFrame {
 		menu.setTxtNotice(text);
 	}
 
-	public CardHandType rankCheck(ArrayList<Card> card) {
-		return rank.Checker(card);
+	public void rankCheck(Player player) {
+		rank.Checker(player);
 	}
 
 	public Board getBoard() {
@@ -140,5 +140,13 @@ public class GameGui extends JFrame {
 
 	public void setTxtComputerMoney(String text) {
 		board.setTxtComputerMoney(text);
+	}
+	
+	public Player[] getPlayer() {
+		return board.getPlayer();
+	}
+
+	public void resetPlayer() {
+		board.resetPlayer();
 	}
 }

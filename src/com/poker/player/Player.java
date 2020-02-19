@@ -2,16 +2,28 @@ package com.poker.player;
 
 import java.util.ArrayList;
 
+import com.poker.emun.CardHandType;
 import com.poker.game.Card;
 
 public class Player {
 	String name;
 	int money;
 	ArrayList<Card> card;
+	CardHandType hand;
 
 	public Player(String name, int money) {
 		this.name = name;
 		this.money = money;
+
+		this.card = new ArrayList<Card>();
+	}
+
+	public CardHandType getHand() {
+		return hand;
+	}
+
+	public void setHand(CardHandType hand) {
+		this.hand = hand;
 	}
 
 	public String getName() {
@@ -41,7 +53,7 @@ public class Player {
 	public Card getCard(int index) {
 		return card.get(index);
 	}
-	
+
 	public void setCard(Card card) {
 		this.card.add(card);
 	}
