@@ -54,7 +54,7 @@ public class MenuPanel extends JPanel {
 
 	private void createTxtNotice() {
 		txtNotice = new JTextArea();
-		txtNotice.setFont(new Font("µ¸¿ò", Font.BOLD, 12));
+		txtNotice.setFont(new Font("µ¸¿ò", Font.BOLD, 11));
 		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
 		noticeScroll.setEnabled(false);

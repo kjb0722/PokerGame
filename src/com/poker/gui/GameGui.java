@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import com.poker.emun.CardHandType;
 import com.poker.game.Card;
@@ -61,12 +62,12 @@ public class GameGui extends JFrame {
 		board.resetPlayerMoney();
 	}
 
-	public JButton[] getComputerBtn() {
-		return board.getComputerBtn();
+	public JLabel[] getComputerCardLbl() {
+		return board.getComputerCardLbl();
 	}
 
-	public JButton[] getPlayerBtn() {
-		return board.getPlayerBtn();
+	public JLabel[] getPlayerCardLbl() {
+		return board.getPlayerCardLbl();
 	}
 
 	public JButton[] getRaiseBtn() {
@@ -131,5 +132,13 @@ public class GameGui extends JFrame {
 
 	public void raiseCheck() {
 		play.raiseCheck();
+	}
+
+	public String getTxtComputerMoney() {
+		return board.getTxtComputerMoney();
+	}
+
+	public void setTxtComputerMoney(String text) {
+		board.setTxtComputerMoney(text);
 	}
 }
