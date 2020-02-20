@@ -11,11 +11,11 @@ public class Card {
 		this.suit = suit;
 		this.number = number;
 	}
-	
+
 	public NumberType getNumberType() {
 		return number;
 	}
-	
+
 	public SuitType getSuitType() {
 		return suit;
 	}

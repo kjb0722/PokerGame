@@ -351,9 +351,12 @@ public class GamePlay {
 	}
 
 	public void raiseDie() {
-		if(!playerMoneyCheck()) {
+		if(playerMoneyCheck()) {
 			return;
 		}
+		
+		takeMoney(player[1]);
+		
 		gamePlay();
 	}
 

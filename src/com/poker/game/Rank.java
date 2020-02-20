@@ -17,9 +17,6 @@ public class Rank {
 		// 정렬
 		handSort();
 
-		//보유 패들 중 가장 높은 숫자의 패 저장
-		highCard();
-
 		if (royalStraightFlush()) {
 			player.setHand(CardHandType.로얄스트레이트플러쉬);
 		} else if (straightFlush()) {
@@ -63,7 +60,7 @@ public class Rank {
 
 	// 카드 정렬
 	private void handSort() {
-		// Number 정렬
+		// Number 오름차순 정렬
 		for (int i = 0; i < hands.size(); i++) {
 			for (int j = (i + 1); j < hands.size(); j++) {
 				int hand = hands.get(i).getNumberOrder();
@@ -79,7 +76,7 @@ public class Rank {
 			}
 		}
 
-		// Suit 정렬
+		// Number가 같은 Suit 정렬
 		for (int i = 0; i < hands.size(); i++) {
 			for (int j = (i + 1); j < hands.size(); j++) {
 				int handNum = hands.get(i).getNumberOrder();
@@ -112,7 +109,7 @@ public class Rank {
 				int num2 = hands.get(j).getNumberOrder();
 				if (num1 == num2) {
 					count++;
-					bestNumberCard(hands.get(j));
+					player.setBestCard(hands.get(j));
 					break;
 				}
 			}
@@ -136,7 +133,7 @@ public class Rank {
 					count++;
 				}
 				if (count >= 3) {
-					bestNumberCard(hands.get(j));
+					player.setBestCard(hands.get(j));
 					return true;
 				}
 			}
@@ -157,7 +154,7 @@ public class Rank {
 			}
 
 			if (count >= 5) {
-				bestNumberCard(hands.get(i + 1));
+				player.setBestCard(hands.get(i + 1));
 				return true;
 			}
 		}
@@ -173,7 +170,7 @@ public class Rank {
 			}
 
 			if (startNumber >= 15) {
-				bestSuitCard(card);
+				player.setBestCard(card);
 				return true;
 			}
 		}
@@ -190,7 +187,7 @@ public class Rank {
 				}
 
 				if (count >= 5) {
-					bestSuitCard(hands.get(j));
+					player.setBestCard(hands.get(j));
 					return true;
 				}
 			}
@@ -201,7 +198,7 @@ public class Rank {
 
 	// 풀하우스 -같은 숫자 3개(트리플)와 같은 숫자 2개(원페어)로 된 패
 	private boolean fullHouse() {
-		return threePair() && pair() > 2;
+		return pair() > 2 && threePair();
 	}
 
 	// 포카드(포카) -같은 숫자의 카드 4장으로 되어 있는 패
@@ -217,6 +214,7 @@ public class Rank {
 				}
 
 				if (count >= 4) {
+					player.setBestCard(hands.get(j));
 					return true;
 				}
 			}
@@ -238,8 +236,8 @@ public class Rank {
 				if (card.getSuit().equals(SuitType.spades.name()) && card.getNumberOrder() == startNumber) {
 					startNumber++;
 					spadesCount++;
+					player.setBestCard(card);
 				}
-				bestSuitCard(card);
 			}
 
 			if (spadesCount >= 5 && startNumber >= 15) {
@@ -247,17 +245,5 @@ public class Rank {
 			}
 		}
 		return false;
-	}
-
-	private void bestSuitCard(Card card) {
-		if (player.getBestCard().getSuitType().getRank() < card.getSuitType().getRank()) {
-			player.setBestCard(card);
-		}
-	}
-
-	private void bestNumberCard(Card card) {
-		if (player.getBestCard().getNumberOrder() < card.getNumberOrder()) {
-			player.setBestCard(card);
-		}
 	}
 }

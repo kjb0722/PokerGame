@@ -14,15 +14,20 @@ import javax.swing.JTextArea;
 import com.poker.emun.MenuType;
 
 public class MenuPanel extends JPanel {
-	private final int btnWidth = 150;
+	private final int btnWidth = 150; // 버튼
 	private final int btnHeight = 50;
 	private final int btnX = 800;
 	private final int btnY = 250;
 	private final int btnGapY = 65;
-	private final int txtNoticeWidth = 235;
+
+	private final int txtNoticeWidth = 235; // 공지
 	private final int txtNoticeHeight = 270;
 	private final int txtNoticeX = 755;
 	private final int txtNoticeY = 5;
+	private final int lblNoticeX = 755;
+	private final int lblNoticeY = 150;
+	private final int lblNoticeWidth = 200;
+	private final int lblNoticeHeight = 300;
 
 	private JButton[] menuBtn;
 	private JTextArea txtNotice;
@@ -54,23 +59,23 @@ public class MenuPanel extends JPanel {
 		createNotice();
 		createBtn();
 	}
-	
+
 	private void createNotice() {
 		txtNotice = new JTextArea();
-		txtNotice.setFont(new Font("돋움", Font.BOLD, 11));
+		txtNotice.setFont(new Font("돋움", Font.BOLD, 10));
 		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
 		noticeScroll.setEnabled(false);
 		add(noticeScroll);
-		
+
 		lblNotice = new JLabel();
 		String text = "<html>";
 		text += "- 1:1 컴퓨터 포커 게임입니다.<br/>";
-		text += "- 컴퓨터 기본 금액: "+gui.getComputerDefaultMoney()+"원<br/>";
-		text += "- 플레이어 기본 금액: "+gui.getPlayerDefaultMoney()+"원<br/>";
+		text += "- 컴퓨터 기본 금액: " + gui.getComputerDefaultMoney() + "원<br/>";
+		text += "- 플레이어 기본 금액: " + gui.getPlayerDefaultMoney() + "원<br/>";
 		text += "</html>";
 		lblNotice.setText(text);
-		lblNotice.setBounds(755, 150, 200, 300);
+		lblNotice.setBounds(lblNoticeX, lblNoticeY, lblNoticeWidth, lblNoticeHeight);
 		add(lblNotice);
 	}
 
@@ -83,7 +88,7 @@ public class MenuPanel extends JPanel {
 			menuBtn[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
 			add(menuBtn[i]);
 			if (MenuType.start.ordinal() == i) {
-				btnName = "게임 시작";
+				btnName = MenuType.start.name();
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -91,7 +96,7 @@ public class MenuPanel extends JPanel {
 					}
 				});
 			} else if (MenuType.reset.ordinal() == i) {
-				btnName = "다시 하기";
+				btnName = MenuType.reset.name();
 				menuBtn[i].setEnabled(false);
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -100,7 +105,7 @@ public class MenuPanel extends JPanel {
 					}
 				});
 			} else if (MenuType.exit.ordinal() == i) {
-				btnName = "종료";
+				btnName = MenuType.exit.name();
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
