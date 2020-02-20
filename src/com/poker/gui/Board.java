@@ -1,6 +1,7 @@
 package com.poker.gui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,13 @@ import com.poker.emun.RaiseType;
 import com.poker.player.Player;
 
 public class Board extends JPanel {
+	public static final String PLAYER_NAME = "PLAYER1";
+	public static final String COMPUTER_NAME = "COMPUTER";
+	
+	private int playerDefaultMoney = 100000;
+	private int computerDefaultMoney = 1000000;
+	private int betDefaultMoney = 1000;
+	
 	private final int panelWidth = GameGui.WIDTH - 250; // 패널
 	private final int panelHeight = GameGui.HEIGHT;
 
@@ -49,13 +57,13 @@ public class Board extends JPanel {
 	private final int lblComputerMoneyWidth = 200; // 컴퓨터 돈
 	private final int lblComputerMoneyHeight = 50;
 	private final int lblComputerMoneyX = 550;
-	private final int lblComputerMoneyY = 0;
+	private final int lblComputerMoneyY = 50;
 	private final int txtComputerMoneyX = 550;
-	private final int txtComputerMoneyY = 40;
+	private final int txtComputerMoneyY = 90;
 	private final int txtComputerMoneyWidth = 100;
 	private final int txtComputerMoneyHeight = 30;
 	private final int lblComputerMoneyUnitX = 660;
-	private final int lblComputerMoneyUnitY = 30;
+	private final int lblComputerMoneyUnitY = 80;
 	private final int lblComputerMoneyUnitWidth = 50;
 	private final int lblComputerMoneyUnitHeight = 50;
 
@@ -80,10 +88,16 @@ public class Board extends JPanel {
 	private final int txtPlateY = 250;
 	private final int txtPlateWidth = 200;
 	private final int txtPlateHeight = 100;
-	private int playerDefaultMoney = 100000;
-	private int computerDefaultMoney = 1000000;
-	private int betDefaultMoney = 1000;
 
+	private final int lblHalfWidth = 100; // 하프 라벨
+	private final int lblHalfHeight = 100;
+	private final int lblHalfX = 15;
+	private final int lblHalfY = 330;
+	private final int txtHalfWidth = 80; // 하프 금액
+	private final int txtHalfHeight = 20;
+	private final int txtHalfX = 80;
+	private final int txtHalfY = 370;
+	
 	private GameGui gui;
 	private JLabel[] computerCardLbl;
 	private JLabel[] playerCardLbl;
@@ -102,12 +116,22 @@ public class Board extends JPanel {
 	private ActionListener listener;
 	private JLayeredPane jpComputerCard;
 	private JLayeredPane jpPlayerCard;
+	private JLabel lblHalf;
+	private JTextField txtHalf;
 
 	private Player[] player;
 
 	public Board(GameGui gui) {
 		this.gui = gui;
 		init();
+	}
+
+	public int getComputerDefaultMoney() {
+		return computerDefaultMoney;
+	}
+
+	public int getPlayerDefaultMoney() {
+		return playerDefaultMoney;
 	}
 
 	public Player[] getPlayer() {
@@ -262,6 +286,36 @@ public class Board extends JPanel {
 		lblComputerMoneyUnit.setFont(new Font("돋움", Font.BOLD, 14));
 		lblComputerMoneyUnit.setForeground(Color.white);
 		add(lblComputerMoneyUnit);
+
+		// 하프 금액
+		lblHalf = new JLabel();
+		lblHalf.setText("하프 금액:");
+		lblHalf.setBounds(lblHalfX, lblHalfY, lblHalfWidth, lblHalfHeight);
+		lblHalf.setForeground(Color.white);
+		lblHalf.setFont(new Font("돋움", Font.BOLD, 12));
+		add(lblHalf);
+		txtHalf = new JTextField();
+		txtHalf.setText("0");
+		txtHalf.setBounds(txtHalfX, txtHalfY, txtHalfWidth, txtHalfHeight);
+		txtHalf.setHorizontalAlignment(JTextField.CENTER);
+		txtHalf.setEditable(false);
+		add(txtHalf);
+	}
+
+	public JLabel getLblHalf() {
+		return lblHalf;
+	}
+
+	public void setLblHalf(JLabel lblHalf) {
+		this.lblHalf = lblHalf;
+	}
+
+	public JTextField getTxtHalf() {
+		return txtHalf;
+	}
+
+	public void setTxtHalf(String money) {
+		txtHalf.setText(money);
 	}
 
 	private void createPlayerComponent() {
@@ -321,13 +375,13 @@ public class Board extends JPanel {
 			String btnName = "";
 			raiseBtn[i] = new JButton();
 			if (i == RaiseType.Half.ordinal()) {
-				btnName = RaiseType.Half.value;
+				btnName = RaiseType.Half.getValue();
 				raiseBtn[i].setName(RaiseType.Half.name());
 			} else if (i == RaiseType.Die.ordinal()) {
-				btnName = RaiseType.Die.value;
+				btnName = RaiseType.Die.getValue();
 				raiseBtn[i].setName(RaiseType.Die.name());
 			} else if (i == RaiseType.Check.ordinal()) {
-				btnName = RaiseType.Check.value;
+				btnName = RaiseType.Check.getValue();
 				raiseBtn[i].setName(RaiseType.Check.name());
 			}
 
@@ -344,11 +398,11 @@ public class Board extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String raiseType = e.getActionCommand();
-				if (raiseType.equals(RaiseType.Half.value)) {
+				if (raiseType.equals(RaiseType.Half.getValue())) {
 					gui.raiseHalf();
-				} else if (raiseType.equals(RaiseType.Die.value)) {
+				} else if (raiseType.equals(RaiseType.Die.getValue())) {
 					gui.raiseDie();
-				} else if (raiseType.equals(RaiseType.Check.value)) {
+				} else if (raiseType.equals(RaiseType.Check.getValue())) {
 					gui.raiseCheck();
 				}
 			}
@@ -357,7 +411,12 @@ public class Board extends JPanel {
 
 	public void resetPlayer() {
 		player = new Player[2];
-		player[0] = new Player("player1", playerDefaultMoney);
-		player[1] = new Player("computer", computerDefaultMoney);
+		player[0] = new Player(PLAYER_NAME, playerDefaultMoney);
+		player[1] = new Player(COMPUTER_NAME, computerDefaultMoney);
+	}
+
+	public void setMoneyInit() {
+		txtPlate.setText("0");
+		txtHalf.setText("0");
 	}
 }

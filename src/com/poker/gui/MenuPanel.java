@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -22,16 +23,23 @@ public class MenuPanel extends JPanel {
 	private final int txtNoticeHeight = 270;
 	private final int txtNoticeX = 755;
 	private final int txtNoticeY = 5;
-	
+
 	private JButton[] menuBtn;
 	private JTextArea txtNotice;
 	private JScrollPane noticeScroll;
+	private JLabel lblNotice;
 	private GameGui gui;
 
 	MenuPanel(GameGui gui) {
 		this.gui = gui;
 		createComponent();
 		init();
+	}
+
+	private void init() {
+		setBackground(Color.lightGray);
+		setBounds(GameGui.WIDTH - 250, 0, 200, GameGui.HEIGHT);
+		setLayout(null);
 	}
 
 	public void setTxtNotice(String text) {
@@ -42,24 +50,28 @@ public class MenuPanel extends JPanel {
 		return txtNotice.getText();
 	}
 
-	private void init() {
-		setBackground(Color.lightGray);
-		setBounds(GameGui.WIDTH - 250, 0, 200, GameGui.HEIGHT);
-		setLayout(null);
-	}
-
 	private void createComponent() {
-		createTxtNotice();
+		createNotice();
 		createBtn();
 	}
-
-	private void createTxtNotice() {
+	
+	private void createNotice() {
 		txtNotice = new JTextArea();
 		txtNotice.setFont(new Font("돋움", Font.BOLD, 11));
 		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
 		noticeScroll.setEnabled(false);
 		add(noticeScroll);
+		
+		lblNotice = new JLabel();
+		String text = "<html>";
+		text += "- 1:1 컴퓨터 포커 게임입니다.<br/>";
+		text += "- 컴퓨터 기본 금액: "+gui.getComputerDefaultMoney()+"원<br/>";
+		text += "- 플레이어 기본 금액: "+gui.getPlayerDefaultMoney()+"원<br/>";
+		text += "</html>";
+		lblNotice.setText(text);
+		lblNotice.setBounds(755, 150, 200, 300);
+		add(lblNotice);
 	}
 
 	private void createBtn() {

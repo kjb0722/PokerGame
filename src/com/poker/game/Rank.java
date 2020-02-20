@@ -17,6 +17,9 @@ public class Rank {
 		// 정렬
 		handSort();
 
+		//보유 패들 중 가장 높은 숫자의 패 저장
+		highCard();
+
 		if (royalStraightFlush()) {
 			player.setHand(CardHandType.로얄스트레이트플러쉬);
 		} else if (straightFlush()) {
@@ -38,12 +41,29 @@ public class Rank {
 		} else if (pair() == 1) {
 			player.setHand(CardHandType.원페어);
 		} else {
+			highCard();
 			player.setHand(CardHandType.노페어);
+		}
+	}
+
+	public int drawCheck(Player[] player) {
+		CardHandType computerHand = player[0].getHand();
+		CardHandType playerHand = player[1].getHand();
+
+		// 로열 스트레이트 플러쉬, 스트레이트 플러쉬, 포카드, 풀하우스, 플러쉬, 마운틴
+		// 무늬로 승패 결정
+		// 나머지는 숫자로 승패 결정
+		if (computerHand.getNumber() >= 5 && computerHand.getNumber() <= 10 && playerHand.getNumber() >= 5
+				&& playerHand.getNumber() <= 10) {
+			return player[0].getBestSuitNumber() > player[1].getBestSuitNumber() ? 0 : 1;
+		} else {
+			return player[0].getBestNumberOrder() > player[1].getBestNumberOrder() ? 0 : 1;
 		}
 	}
 
 	// 카드 정렬
 	private void handSort() {
+		// Number 정렬
 		for (int i = 0; i < hands.size(); i++) {
 			for (int j = (i + 1); j < hands.size(); j++) {
 				int hand = hands.get(i).getNumberOrder();
@@ -58,6 +78,29 @@ public class Rank {
 				}
 			}
 		}
+
+		// Suit 정렬
+		for (int i = 0; i < hands.size(); i++) {
+			for (int j = (i + 1); j < hands.size(); j++) {
+				int handNum = hands.get(i).getNumberOrder();
+				int handNum2 = hands.get(j).getNumberOrder();
+				int handSuit = hands.get(i).getSuitType().getRank();
+				int handSuit2 = hands.get(j).getSuitType().getRank();
+				if (handNum == handNum2 && handSuit > handSuit2) {
+					Card tempCard = hands.get(i);
+					Card tempCard2 = hands.get(j);
+					hands.remove(j);
+					hands.add(j, tempCard);
+					hands.remove(i);
+					hands.add(i, tempCard2);
+				}
+			}
+		}
+	}
+
+	// 하이카드 : 어느 족보에도 해당하지 않는다면 가장 높은 숫자의 패
+	private void highCard() {
+		player.setBestCard(hands.get(hands.size() - 1));
 	}
 
 	// 원 페어 -5장의 카드 중에서 2장의 숫자가 같은 패
@@ -69,7 +112,7 @@ public class Rank {
 				int num2 = hands.get(j).getNumberOrder();
 				if (num1 == num2) {
 					count++;
-					player.setBestCard(hands.get(i));
+					bestNumberCard(hands.get(j));
 					break;
 				}
 			}
@@ -91,9 +134,9 @@ public class Rank {
 				int num2 = hands.get(j).getNumberOrder();
 				if (num1 == num2) {
 					count++;
-					player.setBestCard(hands.get(j));
 				}
 				if (count >= 3) {
+					bestNumberCard(hands.get(j));
 					return true;
 				}
 			}
@@ -111,10 +154,10 @@ public class Rank {
 
 			if (hands.get(i).getNumberOrder() + 1 == hands.get(i + 1).getNumberOrder()) {
 				count++;
-				player.setBestCard(hands.get(i + 1));
 			}
 
 			if (count >= 5) {
+				bestNumberCard(hands.get(i + 1));
 				return true;
 			}
 		}
@@ -127,10 +170,10 @@ public class Rank {
 		for (Card card : hands) {
 			if (card.getNumberOrder() == startNumber) {
 				startNumber++;
-				player.setBestCard(card);
 			}
 
 			if (startNumber >= 15) {
+				bestSuitCard(card);
 				return true;
 			}
 		}
@@ -144,10 +187,10 @@ public class Rank {
 			for (int j = 0; j < hands.size(); j++) {
 				if (hands.get(i).getSuit().equals(hands.get(j).getSuit())) {
 					count++;
-					player.setBestCard(hands.get(j));
 				}
 
 				if (count >= 5) {
+					bestSuitCard(hands.get(j));
 					return true;
 				}
 			}
@@ -171,7 +214,6 @@ public class Rank {
 
 				if (num1 == num2) {
 					count++;
-					player.setBestCard(hands.get(j));
 				}
 
 				if (count >= 4) {
@@ -196,8 +238,8 @@ public class Rank {
 				if (card.getSuit().equals(SuitType.spades.name()) && card.getNumberOrder() == startNumber) {
 					startNumber++;
 					spadesCount++;
-					player.setBestCard(card);
 				}
+				bestSuitCard(card);
 			}
 
 			if (spadesCount >= 5 && startNumber >= 15) {
@@ -205,5 +247,17 @@ public class Rank {
 			}
 		}
 		return false;
+	}
+
+	private void bestSuitCard(Card card) {
+		if (player.getBestCard().getSuitType().getRank() < card.getSuitType().getRank()) {
+			player.setBestCard(card);
+		}
+	}
+
+	private void bestNumberCard(Card card) {
+		if (player.getBestCard().getNumberOrder() < card.getNumberOrder()) {
+			player.setBestCard(card);
+		}
 	}
 }

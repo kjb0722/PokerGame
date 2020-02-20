@@ -1,25 +1,34 @@
 package com.poker.game;
 
-public class Card {
-	private String suit;
-	private String number;
-	private int numberOrder;
+import com.poker.emun.NumberType;
+import com.poker.emun.SuitType;
 
-	Card(String suit, String number, int numberOrder) {
+public class Card {
+	private SuitType suit;
+	private NumberType number;
+
+	Card(SuitType suit, NumberType number) {
 		this.suit = suit;
 		this.number = number;
-		this.numberOrder = numberOrder;
 	}
-
-	public String getSuit() {
+	
+	public NumberType getNumberType() {
+		return number;
+	}
+	
+	public SuitType getSuitType() {
 		return suit;
 	}
 
+	public String getSuit() {
+		return suit.name();
+	}
+
 	public String getNumber() {
-		return number;
+		return number.name();
 	}
 
 	public int getNumberOrder() {
-		return numberOrder;
+		return number.getNumber();
 	}
 }

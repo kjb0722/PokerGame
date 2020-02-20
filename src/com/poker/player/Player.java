@@ -7,11 +7,11 @@ import com.poker.game.Card;
 
 public class Player {
 	public final int CARD_TOTAL_COUNT = 7;
-	
-	String name;
-	int money;
-	ArrayList<Card> card;
-	CardHandType hand;
+
+	private String name;
+	private int money;
+	private ArrayList<Card> card;
+	private CardHandType hand;
 	private Card bestCard;
 
 	public Player(String name, int money) {
@@ -19,6 +19,14 @@ public class Player {
 		this.money = money;
 
 		this.card = new ArrayList<Card>();
+	}
+
+	public int getBestNumberOrder() {
+		return bestCard.getNumberOrder();
+	}
+
+	public int getBestSuitNumber() {
+		return bestCard.getSuitType().getRank();
 	}
 
 	public Card getBestCard() {

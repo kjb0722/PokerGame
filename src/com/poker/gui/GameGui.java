@@ -94,16 +94,16 @@ public class GameGui extends JFrame {
 		play.bet(betType);
 	}
 
-	public String getTxtPlate() {
-		return board.getTxtPlate();
+	public int getTxtPlate() {
+		return Integer.parseInt(board.getTxtPlate().replace(",", ""));
 	}
 
 	public void setTxtPlate(String text) {
 		board.setTxtPlate(text);
 	}
 
-	public String getTxtPlayerMoney() {
-		return board.getTxtPlayerMoney();
+	public int getTxtPlayerMoney() {
+		return Integer.parseInt(board.getTxtPlayerMoney().replace(",", ""));
 	}
 
 	public void setTxtPlayerMoney(String text) {
@@ -134,8 +134,8 @@ public class GameGui extends JFrame {
 		play.raiseCheck();
 	}
 
-	public String getTxtComputerMoney() {
-		return board.getTxtComputerMoney();
+	public int getTxtComputerMoney() {
+		return Integer.parseInt(board.getTxtComputerMoney().replace(",", ""));
 	}
 
 	public void setTxtComputerMoney(String text) {
@@ -148,5 +148,25 @@ public class GameGui extends JFrame {
 
 	public void resetPlayer() {
 		board.resetPlayer();
+	}
+
+	public int drawCheck(Player[] player) {
+		return rank.drawCheck(player);
+	}
+
+	public int getComputerDefaultMoney() {
+		return board.getComputerDefaultMoney();
+	}
+
+	public int getPlayerDefaultMoney() {
+		return board.getPlayerDefaultMoney();
+	}
+
+	public void setTxtHalf(int money) {
+		board.setTxtHalf(Integer.toString(money));
+	}
+
+	public void setMoneyInit() {
+		board.setMoneyInit();
 	}
 }
