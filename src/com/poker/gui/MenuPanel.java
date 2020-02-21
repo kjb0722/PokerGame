@@ -10,24 +10,25 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.LineBorder;
 
 import com.poker.emun.MenuType;
 
 public class MenuPanel extends JPanel {
 	private final int btnWidth = 150; // 버튼
 	private final int btnHeight = 50;
-	private final int btnX = 800;
-	private final int btnY = 250;
+	private final int btnX = 240;
+	private final int btnY = 210;
 	private final int btnGapY = 65;
 
-	private final int txtNoticeWidth = 235; // 공지
-	private final int txtNoticeHeight = 270;
-	private final int txtNoticeX = 755;
+	private final int txtNoticeWidth = 400; // 공지
+	private final int txtNoticeHeight = 480;
+	private final int txtNoticeX = 0;
 	private final int txtNoticeY = 5;
-	private final int lblNoticeX = 755;
-	private final int lblNoticeY = 150;
+	private final int lblNoticeX = 20;
+	private final int lblNoticeY = 500;
 	private final int lblNoticeWidth = 200;
-	private final int lblNoticeHeight = 300;
+	private final int lblNoticeHeight = 150;
 
 	private JButton[] menuBtn;
 	private JTextArea txtNotice;
@@ -42,8 +43,8 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void init() {
-		setBackground(Color.lightGray);
-		setBounds(GameGui.WIDTH - 250, 0, 200, GameGui.HEIGHT);
+		setBackground(Color.LIGHT_GRAY);
+		setBounds(GameGui.WIDTH - 400, 0, 400, GameGui.HEIGHT);
 		setLayout(null);
 	}
 
@@ -62,10 +63,11 @@ public class MenuPanel extends JPanel {
 
 	private void createNotice() {
 		txtNotice = new JTextArea();
-		txtNotice.setFont(new Font("돋움", Font.BOLD, 10));
+		txtNotice.setFont(new Font("돋움", Font.BOLD, 15));
+		txtNotice.setEditable(false);
+		txtNotice.setForeground(Color.black);
 		noticeScroll = new JScrollPane(txtNotice);
 		noticeScroll.setBounds(txtNoticeX, txtNoticeY, txtNoticeWidth, txtNoticeHeight);
-		noticeScroll.setEnabled(false);
 		add(noticeScroll);
 
 		lblNotice = new JLabel();
@@ -75,6 +77,7 @@ public class MenuPanel extends JPanel {
 		text += "- 플레이어 기본 금액: " + gui.getPlayerDefaultMoney() + "원<br/>";
 		text += "</html>";
 		lblNotice.setText(text);
+		lblNotice.setBorder(new LineBorder(Color.DARK_GRAY, 3));
 		lblNotice.setBounds(lblNoticeX, lblNoticeY, lblNoticeWidth, lblNoticeHeight);
 		add(lblNotice);
 	}
@@ -87,16 +90,16 @@ public class MenuPanel extends JPanel {
 			menuBtn[i] = new JButton();
 			menuBtn[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
 			add(menuBtn[i]);
-			if (MenuType.start.ordinal() == i) {
-				btnName = MenuType.start.name();
+			if (MenuType.START.ordinal() == i) {
+				btnName = MenuType.START.name();
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						gameRun();
 					}
 				});
-			} else if (MenuType.reset.ordinal() == i) {
-				btnName = MenuType.reset.name();
+			} else if (MenuType.RESET.ordinal() == i) {
+				btnName = MenuType.RESET.name();
 				menuBtn[i].setEnabled(false);
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
@@ -104,8 +107,8 @@ public class MenuPanel extends JPanel {
 						resetBoard();
 					}
 				});
-			} else if (MenuType.exit.ordinal() == i) {
-				btnName = MenuType.exit.name();
+			} else if (MenuType.EXIT.ordinal() == i) {
+				btnName = MenuType.EXIT.name();
 				menuBtn[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -130,16 +133,16 @@ public class MenuPanel extends JPanel {
 	}
 
 	public void enableMenuBtn() {
-		if (menuBtn[MenuType.start.getNumber()].isEnabled()) {
-			menuBtn[MenuType.start.getNumber()].setEnabled(false);
+		if (menuBtn[MenuType.START.getNumber()].isEnabled()) {
+			menuBtn[MenuType.START.getNumber()].setEnabled(false);
 		} else {
-			menuBtn[MenuType.start.getNumber()].setEnabled(true);
+			menuBtn[MenuType.START.getNumber()].setEnabled(true);
 		}
 
-		if (menuBtn[MenuType.reset.getNumber()].isEnabled()) {
-			menuBtn[MenuType.reset.getNumber()].setEnabled(false);
+		if (menuBtn[MenuType.RESET.getNumber()].isEnabled()) {
+			menuBtn[MenuType.RESET.getNumber()].setEnabled(false);
 		} else {
-			menuBtn[MenuType.reset.getNumber()].setEnabled(true);
+			menuBtn[MenuType.RESET.getNumber()].setEnabled(true);
 		}
 	}
 }

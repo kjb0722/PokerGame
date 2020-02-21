@@ -1,7 +1,7 @@
 package com.poker.emun;
 
 public enum MenuType {
-	start(0), reset(1), exit(2);
+	START(0), RESET(1), EXIT(2);
 
 	private final int number;
 

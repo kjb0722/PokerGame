@@ -1,7 +1,6 @@
 package com.poker.gui;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +19,12 @@ import com.poker.player.Player;
 public class Board extends JPanel {
 	public static final String PLAYER_NAME = "PLAYER1";
 	public static final String COMPUTER_NAME = "COMPUTER";
-	
+
 	private int playerDefaultMoney = 100000;
-	private int computerDefaultMoney = 1000000;
+	private int computerDefaultMoney = 10000;
 	private int betDefaultMoney = 1000;
-	
-	private final int panelWidth = GameGui.WIDTH - 250; // 패널
+
+	private final int panelWidth = GameGui.WIDTH - 400; // 패널
 	private final int panelHeight = GameGui.HEIGHT;
 
 	private final int lblCardWidth = 100; // 카드
@@ -42,17 +41,27 @@ public class Board extends JPanel {
 	private final int jpPlayerWidth = 480;
 	private final int jpPlayerHeight = 170;
 
-	private final int txtComputerCardX = 220; // 카드 표시
+	private final int txtComputerCardX = 30; // 카드 표시
 	private final int txtComputerCardY = 5;
 	private final int txtCardWidth = 90;
 	private final int txtCardHeight = 20;
-	private final int txtPlayerCardX = 220;
+	private final int txtPlayerCardX = 30;
 	private final int txtPlayerCardY = panelHeight - 225;
 	private final int btnRaiseX = 80;
 	private final int btnRaiseGapX = 100;
 	private final int btnRaiseY = panelHeight / 2 + 50;
 	private final int btnRaiseWidth = 80;
 	private final int btnRaiseHeight = 30;
+
+	private final int lblComputerRankX = 30; // 컴퓨터 족보
+	private final int lblComputerRankY = 198; 
+	private final int lblComputerRankWidth = 250; 
+	private final int lblComputerRankHeight = 50;
+	
+	private final int lblPlayerRankX = 260; // 플레이어 족보
+	private final int lblPlayerRankY = 453; 
+	private final int lblPlayerRankWidth = 250; 
+	private final int lblPlayerRankHeight = 50; 
 
 	private final int lblComputerMoneyWidth = 200; // 컴퓨터 돈
 	private final int lblComputerMoneyHeight = 50;
@@ -82,7 +91,7 @@ public class Board extends JPanel {
 
 	private final int lblPlateWidth = 100; // 판 돈
 	private final int lblPlateHeight = 100;
-	private final int lblPlateX = 200;
+	private final int lblPlateX = 250;
 	private final int lblPlateY = 250;
 	private final int txtPlateX = 300;
 	private final int txtPlateY = 250;
@@ -97,7 +106,7 @@ public class Board extends JPanel {
 	private final int txtHalfHeight = 20;
 	private final int txtHalfX = 80;
 	private final int txtHalfY = 370;
-	
+
 	private GameGui gui;
 	private JLabel[] computerCardLbl;
 	private JLabel[] playerCardLbl;
@@ -118,6 +127,8 @@ public class Board extends JPanel {
 	private JLayeredPane jpPlayerCard;
 	private JLabel lblHalf;
 	private JTextField txtHalf;
+	private JLabel lblComputerRank;
+	private JLabel lblPlayerRank;
 
 	private Player[] player;
 
@@ -208,7 +219,7 @@ public class Board extends JPanel {
 
 	private void init() {
 		setBounds(0, 0, panelWidth, panelHeight);
-		setBackground(Color.DARK_GRAY);
+		setBackground(Color.getHSBColor(60, 91, 0));
 		setLayout(null);
 		df = new DecimalFormat("#,###");
 
@@ -234,7 +245,7 @@ public class Board extends JPanel {
 		txtPlate.setText(df.format(0));
 		txtPlate.setEnabled(false);
 		txtPlate.setBounds(txtPlateX, txtPlateY, txtPlateWidth, txtPlateHeight);
-		txtPlate.setFont(new Font("돋움", Font.BOLD, 14));
+		txtPlate.setFont(new Font("돋움", Font.BOLD, 20));
 		txtPlate.setBackground(Color.darkGray);
 		txtPlate.setHorizontalAlignment(JTextField.CENTER);
 		add(txtPlate);
@@ -256,7 +267,8 @@ public class Board extends JPanel {
 		computerCardTxt.setBounds(txtComputerCardX, txtComputerCardY, txtCardWidth, txtCardHeight);
 		computerCardTxt.setText("컴퓨터 카드");
 		computerCardTxt.setHorizontalAlignment(JTextField.CENTER);
-		computerCardTxt.setEnabled(false);
+		computerCardTxt.setFont(new Font("돋움", Font.BOLD, 12));
+		computerCardTxt.setEditable(false);
 		add(computerCardTxt);
 
 		// 컴퓨터 보유 금액 라벨
@@ -300,6 +312,15 @@ public class Board extends JPanel {
 		txtHalf.setHorizontalAlignment(JTextField.CENTER);
 		txtHalf.setEditable(false);
 		add(txtHalf);
+
+		// 족보
+		lblComputerRank = new JLabel();
+		lblComputerRank.setBounds(lblComputerRankX, lblComputerRankY, lblComputerRankWidth, lblComputerRankHeight);
+		lblComputerRank.setFont(new Font("seria", Font.BOLD, 20));
+		lblComputerRank.setForeground(Color.white);
+		lblComputerRank.setBorder(new LineBorder(Color.white, 2));
+		lblComputerRank.setHorizontalAlignment(JTextField.CENTER);
+		add(lblComputerRank);
 	}
 
 	public JLabel getLblHalf() {
@@ -334,7 +355,8 @@ public class Board extends JPanel {
 		playerCardTxt.setBounds(txtPlayerCardX, txtPlayerCardY, txtCardWidth, txtCardHeight);
 		playerCardTxt.setText("플레이어 카드");
 		playerCardTxt.setHorizontalAlignment(JTextField.CENTER);
-		playerCardTxt.setEnabled(false);
+		playerCardTxt.setFont(new Font("돋움", Font.BOLD, 12));
+		playerCardTxt.setEditable(false);
 		add(playerCardTxt);
 
 		// 플레이어 보유 금액 라벨
@@ -364,6 +386,15 @@ public class Board extends JPanel {
 		lblPlayerMoneyUnit.setFont(new Font("돋움", Font.BOLD, 14));
 		lblPlayerMoneyUnit.setForeground(Color.white);
 		add(lblPlayerMoneyUnit);
+
+		// 족보
+		lblPlayerRank = new JLabel();
+		lblPlayerRank.setBounds(lblPlayerRankX, lblPlayerRankY, lblPlayerRankWidth, lblPlayerRankHeight);
+		lblPlayerRank.setFont(new Font("seria", Font.BOLD, 20));
+		lblPlayerRank.setForeground(Color.white);
+		lblPlayerRank.setBorder(new LineBorder(Color.white, 2));
+		lblPlayerRank.setHorizontalAlignment(JTextField.CENTER);
+		add(lblPlayerRank);
 
 //		하프	전체 판돈의 절반, 즉 50% 금액을 베팅합니다.
 //		다이	새로 베팅하지 않고, 이번 판을 포기합니다.

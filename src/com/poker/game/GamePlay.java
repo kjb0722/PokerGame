@@ -16,7 +16,6 @@ import com.poker.emun.SuitType;
 import com.poker.gui.Board;
 import com.poker.gui.GameGui;
 import com.poker.player.Player;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 public class GamePlay {
 	private ArrayList<Card> cards;
@@ -104,7 +103,7 @@ public class GamePlay {
 		plateMoney += betMoney;
 
 		player.setMoney(money);
-		
+
 		gui.setTxtPlate(df.format(plateMoney));
 		if (player.getName().equals(Board.PLAYER_NAME)) {
 			gui.setTxtPlayerMoney(df.format(money));
@@ -177,10 +176,12 @@ public class GamePlay {
 			playerCardLbl[i].setName(card1.getSuit() + "-" + card1.getNumberOrder());
 			btnImageInsert(playerCardLbl[i], card1.getSuit(), card1.getNumberOrder());
 			cards.remove(0);
+			cardSpreadMove(player[0], playerCardLbl[i]);
 
 			Card card2 = cards.get(0);
 			player[1].setCard(card2);
 			computerCardLbl[i].setName(card2.getSuit() + "-" + card2.getNumberOrder());
+			cardSpreadMove(player[1], computerCardLbl[i]);
 
 			// 컴퓨터는 두번째, 세번째, 마지막 카드는 오픈 안함
 			if (i == 1 || i == 2 || i == (player[1].CARD_TOTAL_COUNT - 1)) {
@@ -190,6 +191,43 @@ public class GamePlay {
 			}
 			cards.remove(0);
 		}
+	}
+
+	private void cardSpreadMove(Player player, JLabel label) {
+		new Thread() {
+			public void run() {
+				int location = 0;
+
+				if (player.getName().equals(Board.PLAYER_NAME)) {
+					location = 1;
+				} else if (player.getName().equals(Board.COMPUTER_NAME)) {
+					location = -1;
+				}
+
+				int labelX = label.getX();
+				int labelY = label.getY();
+				int x = labelX - 150;
+				int y = labelY - (150 * location);
+				while (x != labelX && y != labelY) {
+					if (x < labelX) {
+						x++;
+					} else {
+						x--;
+					}
+					if (y < labelY) {
+						y++;
+					} else {
+						y--;
+					}
+					label.setLocation(x, y);
+					try {
+						sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+		}.start();
 	}
 
 	public boolean lastCardCheck() {
@@ -208,7 +246,7 @@ public class GamePlay {
 
 			// 판 돈, 하프 금액 초기화
 			gui.setMoneyInit();
-			
+
 			// 플레이어 기본 베팅 금액이 있는지 확인
 			// 컴퓨터
 			if (!moneyCheck(player[0], gui.getBetDefaultMoney())) {
@@ -306,8 +344,8 @@ public class GamePlay {
 	}
 
 	private void takeMoney(Player player) {
-		StringBuilder text = new StringBuilder(player.getName() + "님 금액 "+player.getMoney() + " - > ");
-		
+		StringBuilder text = new StringBuilder(player.getName() + "님 금액 " + player.getMoney() + " - > ");
+
 		int plateMoney = gui.getTxtPlate();
 		int money = player.getMoney() + plateMoney;
 		player.setMoney(money);
@@ -316,7 +354,7 @@ public class GamePlay {
 		} else if (player.getName().equals(Board.PLAYER_NAME)) {
 			gui.setTxtPlayerMoney(df.format(player.getMoney()));
 		}
-		
+
 		text.append(player.getMoney());
 		gui.setTxtNotice(text.toString());
 	}
@@ -347,20 +385,23 @@ public class GamePlay {
 	}
 
 	public void raiseHalf() {
+		gui.setTxtNotice("[하프]");
 		bet(RaiseType.Half.getValue());
 	}
 
 	public void raiseDie() {
-		if(playerMoneyCheck()) {
+		gui.setTxtNotice("[다이]");
+		if (playerMoneyCheck()) {
 			return;
 		}
-		
+
 		takeMoney(player[1]);
-		
+
 		gamePlay();
 	}
 
 	public void raiseCheck() {
+		gui.setTxtNotice("[체크]");
 		bet(RaiseType.Check.getValue());
 	}
 }

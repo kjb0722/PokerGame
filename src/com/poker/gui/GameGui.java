@@ -1,25 +1,23 @@
 package com.poker.gui;
 
-import java.util.ArrayList;
+import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import com.poker.emun.CardHandType;
-import com.poker.game.Card;
 import com.poker.game.GamePlay;
 import com.poker.game.Rank;
 import com.poker.player.Player;
 
 public class GameGui extends JFrame {
-	static final int WIDTH = 1000;
+	static final int WIDTH = 1100;
 	static final int HEIGHT = 700;
 	private Board board;
 	private MenuPanel menu;
 	private GamePlay play;
 	private Rank rank;
-	
+
 	public GameGui() {
 		init();
 	}
@@ -49,8 +47,10 @@ public class GameGui extends JFrame {
 		add(menu);
 
 		rank = new Rank();
-
-		setTitle("포커 게임");
+		
+		setLayout(null);
+		setTitle("1:1 포커 게임");
+		setUndecorated(true);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(0, 0, WIDTH, HEIGHT);
@@ -141,7 +141,7 @@ public class GameGui extends JFrame {
 	public void setTxtComputerMoney(String text) {
 		board.setTxtComputerMoney(text);
 	}
-	
+
 	public Player[] getPlayer() {
 		return board.getPlayer();
 	}
