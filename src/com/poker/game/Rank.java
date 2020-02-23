@@ -10,7 +10,7 @@ public class Rank {
 	ArrayList<Card> hands;
 	Player player;
 
-	public void Checker(Player player) {
+	public void rankChecker(Player player) {
 		this.player = player;
 		this.hands = player.getArrayCard();
 

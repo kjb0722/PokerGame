@@ -21,7 +21,7 @@ public class Board extends JPanel {
 	public static final String COMPUTER_NAME = "COMPUTER";
 
 	private int playerDefaultMoney = 100000;
-	private int computerDefaultMoney = 10000;
+	private int computerDefaultMoney = 100000;
 	private int betDefaultMoney = 1000;
 
 	private final int panelWidth = GameGui.WIDTH - 400; // 패널
@@ -54,14 +54,14 @@ public class Board extends JPanel {
 	private final int btnRaiseHeight = 30;
 
 	private final int lblComputerRankX = 30; // 컴퓨터 족보
-	private final int lblComputerRankY = 198; 
-	private final int lblComputerRankWidth = 250; 
+	private final int lblComputerRankY = 198;
+	private final int lblComputerRankWidth = 250;
 	private final int lblComputerRankHeight = 50;
-	
+
 	private final int lblPlayerRankX = 260; // 플레이어 족보
-	private final int lblPlayerRankY = 453; 
-	private final int lblPlayerRankWidth = 250; 
-	private final int lblPlayerRankHeight = 50; 
+	private final int lblPlayerRankY = 453;
+	private final int lblPlayerRankWidth = 250;
+	private final int lblPlayerRankHeight = 50;
 
 	private final int lblComputerMoneyWidth = 200; // 컴퓨터 돈
 	private final int lblComputerMoneyHeight = 50;
@@ -75,6 +75,10 @@ public class Board extends JPanel {
 	private final int lblComputerMoneyUnitY = 80;
 	private final int lblComputerMoneyUnitWidth = 50;
 	private final int lblComputerMoneyUnitHeight = 50;
+	private final int lblComputerBetMoneyX = 550;
+	private final int lblComputerBetMoneyY = 90;
+	private final int lblComputerBetMoneyWidth = 100;
+	private final int lblComputerBetMoneyHeight = 100;
 
 	private final int lblPlayerMoneyWidth = 200; // 플레이어 돈
 	private final int lblPlayerMoneyHeight = 50;
@@ -88,6 +92,10 @@ public class Board extends JPanel {
 	private final int lblPlayerMoneyUnitY = 560;
 	private final int lblPlayerMoneyUnitWidth = 50;
 	private final int lblPlayerMoneyUnitHeight = 50;
+	private final int lblPlayerBetMoneyX = 550;
+	private final int lblPlayerBetMoneyY = 480;
+	private final int lblPlayerBetMoneyWidth = 100;
+	private final int lblPlayerBetMoneyHeight = 100;
 
 	private final int lblPlateWidth = 100; // 판 돈
 	private final int lblPlateHeight = 100;
@@ -107,12 +115,20 @@ public class Board extends JPanel {
 	private final int txtHalfX = 80;
 	private final int txtHalfY = 370;
 
-	private GameGui gui;
-	private JLabel[] computerCardLbl;
-	private JLabel[] playerCardLbl;
-	private JTextField computerCardTxt;
-	private JTextField playerCardTxt;
-	private JButton[] raiseBtn;
+	private final int lblComputerResultX = 520; // 컴퓨터 게임 결과
+	private final int lblComputerResultY = 170;
+	private final int lblComputerResultWidth = 170;
+	private final int lblComputerResultHeight = 70;
+	private final int lblPlayerResultX = 520; // 플레이어 게임 결과
+	private final int lblPlayerResultY = 430;
+	private final int lblPlayerResultWidth = 170;
+	private final int lblPlayerResultHeight = 70;
+
+	private JLabel[] lblComputerCard;
+	private JLabel[] lblPlayerCard;
+	private JTextField txtComputerCard;
+	private JTextField txtPlayerCard;
+	private JButton[] btnRaise;
 	private JLabel lblComputerMoney;
 	private JTextField txtComputerMoney;
 	private JLabel lblComputerMoneyUnit;
@@ -129,7 +145,12 @@ public class Board extends JPanel {
 	private JTextField txtHalf;
 	private JLabel lblComputerRank;
 	private JLabel lblPlayerRank;
+	private JLabel lblComputerBetMoney;
+	private JLabel lblPlayerBetMoney;
+	private JLabel lblComputerResult;
+	private JLabel lblPlayerResult;
 
+	private GameGui gui;
 	private Player[] player;
 
 	public Board(GameGui gui) {
@@ -177,16 +198,12 @@ public class Board extends JPanel {
 		return txtPlate.getText();
 	}
 
-	public JLabel[] getComputerCardLbl() {
-		return computerCardLbl;
+	public JLabel[] getLblComputerCard() {
+		return lblComputerCard;
 	}
 
-	public JLabel[] getPlayerCardLbl() {
-		return playerCardLbl;
-	}
-
-	public JButton[] getRaiseBtn() {
-		return raiseBtn;
+	public JLabel[] getLblPlayerCard() {
+		return lblPlayerCard;
 	}
 
 	public void resetPlayerMoney() {
@@ -195,25 +212,42 @@ public class Board extends JPanel {
 	}
 
 	public void resetBoard() {
-		resetCardBtn();
-		resetRaiseBtn();
+		resetCardLbl();
+		resetRank();
+		resetResult();
+		resetCardTxt();
 		txtPlate.setText(("0"));
 	}
 
-	public void resetCardBtn() {
-		for (int i = 0; i < computerCardLbl.length; i++) {
-			computerCardLbl[i].setName("");
-			computerCardLbl[i].setIcon(null);
+	private void resetCardTxt() {
+		txtComputerCard.setBackground(Color.white);
+		txtPlayerCard.setBackground(Color.white);
+	}
+
+	public void resetResult() {
+		lblPlayerResult.setText("");
+		lblComputerResult.setText("");
+	}
+
+	private void resetRank() {
+		lblPlayerRank.setText("");
+		lblComputerRank.setText("");
+	}
+
+	public void resetCardLbl() {
+		for (int i = 0; i < lblComputerCard.length; i++) {
+			lblComputerCard[i].setName("");
+			lblComputerCard[i].setIcon(null);
 		}
-		for (int i = 0; i < playerCardLbl.length; i++) {
-			playerCardLbl[i].setName("");
-			playerCardLbl[i].setIcon(null);
+		for (int i = 0; i < lblPlayerCard.length; i++) {
+			lblPlayerCard[i].setName("");
+			lblPlayerCard[i].setIcon(null);
 		}
 	}
 
-	public void resetRaiseBtn() {
-		for (int i = 0; i < raiseBtn.length; i++) {
-			raiseBtn[i].setEnabled(false);
+	public void btnRaiseEnable(boolean enable) {
+		for(int i=0;i<btnRaise.length;i++) {
+			btnRaise[i].setEnabled(enable);
 		}
 	}
 
@@ -252,24 +286,24 @@ public class Board extends JPanel {
 	}
 
 	private void createComputerComponent() {
-		computerCardLbl = new JLabel[7];
+		lblComputerCard = new JLabel[7];
 		jpComputerCard = new JLayeredPane();
 		jpComputerCard.setBorder(new LineBorder(Color.white, 3));
 		jpComputerCard.setBounds(jpComputerCardX, jpComputerCardY, jpComputerWidth, jpComputerHeight);
 		add(jpComputerCard);
-		for (int i = 0; i < computerCardLbl.length; i++) {
-			computerCardLbl[i] = new JLabel();
-			computerCardLbl[i].setBounds(lblCardX + (lblCardGapX * i), lblCardY, lblCardWidth, lblCardHeight);
-			jpComputerCard.add(computerCardLbl[i], new Integer(i));
+		for (int i = 0; i < lblComputerCard.length; i++) {
+			lblComputerCard[i] = new JLabel();
+			lblComputerCard[i].setBounds(lblCardX + (lblCardGapX * i), lblCardY, lblCardWidth, lblCardHeight);
+			jpComputerCard.add(lblComputerCard[i], new Integer(i));
 		}
 
-		computerCardTxt = new JTextField();
-		computerCardTxt.setBounds(txtComputerCardX, txtComputerCardY, txtCardWidth, txtCardHeight);
-		computerCardTxt.setText("컴퓨터 카드");
-		computerCardTxt.setHorizontalAlignment(JTextField.CENTER);
-		computerCardTxt.setFont(new Font("돋움", Font.BOLD, 12));
-		computerCardTxt.setEditable(false);
-		add(computerCardTxt);
+		txtComputerCard = new JTextField();
+		txtComputerCard.setBounds(txtComputerCardX, txtComputerCardY, txtCardWidth, txtCardHeight);
+		txtComputerCard.setText("컴퓨터 카드");
+		txtComputerCard.setHorizontalAlignment(JTextField.CENTER);
+		txtComputerCard.setFont(new Font("돋움", Font.BOLD, 12));
+		txtComputerCard.setEditable(false);
+		add(txtComputerCard);
 
 		// 컴퓨터 보유 금액 라벨
 		lblComputerMoney = new JLabel();
@@ -299,6 +333,14 @@ public class Board extends JPanel {
 		lblComputerMoneyUnit.setForeground(Color.white);
 		add(lblComputerMoneyUnit);
 
+		// 전 베팅 금액
+		lblComputerBetMoney = new JLabel();
+		lblComputerBetMoney.setBounds(lblComputerBetMoneyX, lblComputerBetMoneyY, lblComputerBetMoneyWidth,
+				lblComputerBetMoneyHeight);
+		lblComputerBetMoney.setFont(new Font("돋움", Font.BOLD, 14));
+		lblComputerBetMoney.setForeground(Color.white);
+		add(lblComputerBetMoney);
+
 		// 하프 금액
 		lblHalf = new JLabel();
 		lblHalf.setText("하프 금액:");
@@ -321,6 +363,16 @@ public class Board extends JPanel {
 		lblComputerRank.setBorder(new LineBorder(Color.white, 2));
 		lblComputerRank.setHorizontalAlignment(JTextField.CENTER);
 		add(lblComputerRank);
+
+		// 게임 결과
+		lblComputerResult = new JLabel();
+		lblComputerResult.setBounds(lblComputerResultX, lblComputerResultY, lblComputerResultWidth,
+				lblComputerResultHeight);
+		lblComputerResult.setFont(new Font("seria", Font.BOLD, 20));
+		lblComputerResult.setForeground(Color.red);
+		lblComputerResult.setHorizontalAlignment(JTextField.CENTER);
+		lblComputerResult.setBorder(new LineBorder(Color.white));
+		add(lblComputerResult);
 	}
 
 	public JLabel getLblHalf() {
@@ -340,24 +392,24 @@ public class Board extends JPanel {
 	}
 
 	private void createPlayerComponent() {
-		playerCardLbl = new JLabel[7];
+		lblPlayerCard = new JLabel[7];
 		jpPlayerCard = new JLayeredPane();
 		jpPlayerCard.setBorder(new LineBorder(Color.white, 3));
 		jpPlayerCard.setBounds(jpPlayerCardX, jpPlayerCardY, jpPlayerWidth, jpPlayerHeight);
 		add(jpPlayerCard);
-		for (int i = 0; i < playerCardLbl.length; i++) {
-			playerCardLbl[i] = new JLabel();
-			playerCardLbl[i].setBounds(lblCardX + (lblCardGapX * i), lblCardY, lblCardWidth, lblCardHeight);
-			jpPlayerCard.add(playerCardLbl[i], new Integer(i));
+		for (int i = 0; i < lblPlayerCard.length; i++) {
+			lblPlayerCard[i] = new JLabel();
+			lblPlayerCard[i].setBounds(lblCardX + (lblCardGapX * i), lblCardY, lblCardWidth, lblCardHeight);
+			jpPlayerCard.add(lblPlayerCard[i], new Integer(i));
 		}
 
-		playerCardTxt = new JTextField();
-		playerCardTxt.setBounds(txtPlayerCardX, txtPlayerCardY, txtCardWidth, txtCardHeight);
-		playerCardTxt.setText("플레이어 카드");
-		playerCardTxt.setHorizontalAlignment(JTextField.CENTER);
-		playerCardTxt.setFont(new Font("돋움", Font.BOLD, 12));
-		playerCardTxt.setEditable(false);
-		add(playerCardTxt);
+		txtPlayerCard = new JTextField();
+		txtPlayerCard.setBounds(txtPlayerCardX, txtPlayerCardY, txtCardWidth, txtCardHeight);
+		txtPlayerCard.setText("플레이어 카드");
+		txtPlayerCard.setHorizontalAlignment(JTextField.CENTER);
+		txtPlayerCard.setFont(new Font("돋움", Font.BOLD, 12));
+		txtPlayerCard.setEditable(false);
+		add(txtPlayerCard);
 
 		// 플레이어 보유 금액 라벨
 		lblPlayerMoney = new JLabel();
@@ -387,6 +439,14 @@ public class Board extends JPanel {
 		lblPlayerMoneyUnit.setForeground(Color.white);
 		add(lblPlayerMoneyUnit);
 
+		// 전 베팅 금액
+		lblPlayerBetMoney = new JLabel();
+		lblPlayerBetMoney.setBounds(lblPlayerBetMoneyX, lblPlayerBetMoneyY, lblPlayerBetMoneyWidth,
+				lblPlayerBetMoneyHeight);
+		lblPlayerBetMoney.setFont(new Font("돋움", Font.BOLD, 14));
+		lblPlayerBetMoney.setForeground(Color.white);
+		add(lblPlayerBetMoney);
+
 		// 족보
 		lblPlayerRank = new JLabel();
 		lblPlayerRank.setBounds(lblPlayerRankX, lblPlayerRankY, lblPlayerRankWidth, lblPlayerRankHeight);
@@ -396,31 +456,37 @@ public class Board extends JPanel {
 		lblPlayerRank.setHorizontalAlignment(JTextField.CENTER);
 		add(lblPlayerRank);
 
+		// 게임 결과
+		lblPlayerResult = new JLabel();
+		lblPlayerResult.setBounds(lblPlayerResultX, lblPlayerResultY, lblPlayerResultWidth, lblPlayerResultHeight);
+		lblPlayerResult.setFont(new Font("seria", Font.BOLD, 20));
+		lblPlayerResult.setForeground(Color.red);
+		lblPlayerResult.setHorizontalAlignment(JTextField.CENTER);
+		lblPlayerResult.setBorder(new LineBorder(Color.white));
+		add(lblPlayerResult);
+
 //		하프	전체 판돈의 절반, 즉 50% 금액을 베팅합니다.
 //		다이	새로 베팅하지 않고, 이번 판을 포기합니다.
 //		체크	머니를 베팅하지 않고 다음 카드를 받습니다.
 //		Half("하프"), Die("다이"), Check("체크");
 //			0			1			2
-		raiseBtn = new JButton[3];
-		for (int i = 0; i < raiseBtn.length; i++) {
+		btnRaise = new JButton[3];
+		for (int i = 0; i < btnRaise.length; i++) {
 			String btnName = "";
-			raiseBtn[i] = new JButton();
+			btnRaise[i] = new JButton();
 			if (i == RaiseType.Half.ordinal()) {
 				btnName = RaiseType.Half.getValue();
-				raiseBtn[i].setName(RaiseType.Half.name());
 			} else if (i == RaiseType.Die.ordinal()) {
 				btnName = RaiseType.Die.getValue();
-				raiseBtn[i].setName(RaiseType.Die.name());
 			} else if (i == RaiseType.Check.ordinal()) {
 				btnName = RaiseType.Check.getValue();
-				raiseBtn[i].setName(RaiseType.Check.name());
 			}
 
-			raiseBtn[i].setText(btnName);
-			raiseBtn[i].setBounds(btnRaiseX + (i * btnRaiseGapX), btnRaiseY, btnRaiseWidth, btnRaiseHeight);
-			raiseBtn[i].setEnabled(false);
-			raiseBtn[i].addActionListener(listener);
-			add(raiseBtn[i]);
+			btnRaise[i].setText(btnName);
+			btnRaise[i].setBounds(btnRaiseX + (i * btnRaiseGapX), btnRaiseY, btnRaiseWidth, btnRaiseHeight);
+			btnRaise[i].setEnabled(false);
+			btnRaise[i].addActionListener(listener);
+			add(btnRaise[i]);
 		}
 	}
 
@@ -449,5 +515,66 @@ public class Board extends JPanel {
 	public void setMoneyInit() {
 		txtPlate.setText("0");
 		txtHalf.setText("0");
+	}
+
+	public void setlblPlayerRank(String text) {
+		lblPlayerRank.setText(text);
+	}
+
+	public void setLblComputerRank(String text) {
+		lblComputerRank.setText(text);
+	}
+
+	public void turnChange(Player player) {
+		if (player.getName().equals(PLAYER_NAME)) {
+			jpPlayerCard.setBorder(new LineBorder(Color.green, 3));
+			lblPlayerRank.setBorder(new LineBorder(Color.green));
+			txtPlayerCard.setBackground(Color.green);
+			jpComputerCard.setBorder(new LineBorder(Color.white, 3));
+			lblComputerRank.setBorder(new LineBorder(Color.white));
+			txtComputerCard.setBackground(Color.white);
+		} else {
+			jpPlayerCard.setBorder(new LineBorder(Color.white, 3));
+			lblPlayerRank.setBorder(new LineBorder(Color.white));
+			txtPlayerCard.setBackground(Color.white);
+			jpComputerCard.setBorder(new LineBorder(Color.green, 3));
+			lblComputerRank.setBorder(new LineBorder(Color.green));
+			txtComputerCard.setBackground(Color.green);
+		}
+	}
+	
+	public void winnerDisplay(Player player) {
+		if (player.getName().equals(PLAYER_NAME)) {
+			jpPlayerCard.setBorder(new LineBorder(Color.red, 3));
+			lblPlayerRank.setBorder(new LineBorder(Color.red));
+			txtPlayerCard.setBackground(Color.red);
+		} else {
+			jpComputerCard.setBorder(new LineBorder(Color.red, 3));
+			lblComputerRank.setBorder(new LineBorder(Color.red));
+			txtComputerCard.setBackground(Color.red);
+		}
+	}
+
+	public void resetTurn() {
+		jpPlayerCard.setBorder(new LineBorder(Color.white, 3));
+		lblPlayerRank.setBorder(new LineBorder(Color.white));
+		jpComputerCard.setBorder(new LineBorder(Color.white, 3));
+		lblComputerRank.setBorder(new LineBorder(Color.white));
+	}
+
+	public void setLblPlayerBetMoney(String betMoney) {
+		lblPlayerBetMoney.setText(betMoney);
+	}
+
+	public void setLblComputerBetMoney(String betMoney) {
+		lblComputerBetMoney.setText(betMoney);
+	}
+
+	public void setLblPlayerResult(String text) {
+		lblPlayerResult.setText(text);
+	}
+
+	public void setLblComputerResult(String text) {
+		lblComputerResult.setText(text);
 	}
 }

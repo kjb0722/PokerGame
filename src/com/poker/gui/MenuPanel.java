@@ -30,7 +30,7 @@ public class MenuPanel extends JPanel {
 	private final int lblNoticeWidth = 200;
 	private final int lblNoticeHeight = 150;
 
-	private JButton[] menuBtn;
+	private JButton[] btnMenu;
 	private JTextArea txtNotice;
 	private JScrollPane noticeScroll;
 	private JLabel lblNotice;
@@ -49,7 +49,8 @@ public class MenuPanel extends JPanel {
 	}
 
 	public void setTxtNotice(String text) {
-		this.txtNotice.setText(txtNotice.getText() + text + "\n");
+		txtNotice.setText(txtNotice.getText() + text + "\n");
+		txtNotice.setCaretPosition(txtNotice.getDocument().getLength());
 	}
 
 	public String getTxtNotice() {
@@ -83,16 +84,15 @@ public class MenuPanel extends JPanel {
 	}
 
 	private void createBtn() {
-		menuBtn = new JButton[3];
-
-		for (int i = 0; i < menuBtn.length; i++) {
+		btnMenu = new JButton[3];
+		for (int i = 0; i < btnMenu.length; i++) {
 			String btnName = "";
-			menuBtn[i] = new JButton();
-			menuBtn[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
-			add(menuBtn[i]);
+			btnMenu[i] = new JButton();
+			btnMenu[i].setBounds(btnX, (GameGui.HEIGHT - btnY) + (btnGapY * i), btnWidth, btnHeight);
+			add(btnMenu[i]);
 			if (MenuType.START.ordinal() == i) {
 				btnName = MenuType.START.name();
-				menuBtn[i].addActionListener(new ActionListener() {
+				btnMenu[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						gameRun();
@@ -100,8 +100,8 @@ public class MenuPanel extends JPanel {
 				});
 			} else if (MenuType.RESET.ordinal() == i) {
 				btnName = MenuType.RESET.name();
-				menuBtn[i].setEnabled(false);
-				menuBtn[i].addActionListener(new ActionListener() {
+				btnMenu[i].setEnabled(false);
+				btnMenu[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						resetBoard();
@@ -109,40 +109,47 @@ public class MenuPanel extends JPanel {
 				});
 			} else if (MenuType.EXIT.ordinal() == i) {
 				btnName = MenuType.EXIT.name();
-				menuBtn[i].addActionListener(new ActionListener() {
+				btnMenu[i].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						System.exit(0);
 					}
 				});
 			}
-			menuBtn[i].setText(btnName);
+			btnMenu[i].setText(btnName);
 		}
 	}
 
 	private void gameRun() {
 		gui.gameRun();
-		enableMenuBtn();
+		btnMenuEnable();
 	}
 
 	private void resetBoard() {
 		gui.resetPlayer();
 		gui.resetBoard();
 		gui.resetPlayerMoney();
-		enableMenuBtn();
+		btnMenuEnable();
+		gui.resetTurn();
+		gui.btnRaiseEnable(false);
+		gui.resetResult();
 	}
 
-	public void enableMenuBtn() {
-		if (menuBtn[MenuType.START.getNumber()].isEnabled()) {
-			menuBtn[MenuType.START.getNumber()].setEnabled(false);
+	public void btnMenuEnable() {
+		if (btnMenu[MenuType.START.getNumber()].isEnabled()) {
+			btnMenu[MenuType.START.getNumber()].setEnabled(false);
 		} else {
-			menuBtn[MenuType.START.getNumber()].setEnabled(true);
+			btnMenu[MenuType.START.getNumber()].setEnabled(true);
 		}
 
-		if (menuBtn[MenuType.RESET.getNumber()].isEnabled()) {
-			menuBtn[MenuType.RESET.getNumber()].setEnabled(false);
+		if (btnMenu[MenuType.RESET.getNumber()].isEnabled()) {
+			btnMenu[MenuType.RESET.getNumber()].setEnabled(false);
 		} else {
-			menuBtn[MenuType.RESET.getNumber()].setEnabled(true);
+			btnMenu[MenuType.RESET.getNumber()].setEnabled(true);
 		}
+	}
+
+	public void btnResetEnable(boolean enable) {
+		btnMenu[MenuType.RESET.ordinal()].setEnabled(enable);
 	}
 }

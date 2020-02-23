@@ -7,7 +7,6 @@ import java.util.Collections;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import com.poker.emun.CardHandType;
 import com.poker.emun.NumberType;
@@ -20,17 +19,15 @@ import com.poker.player.Player;
 public class GamePlay {
 	private ArrayList<Card> cards;
 	private GameGui gui;
-	private JLabel[] computerCardLbl;
-	private JLabel[] playerCardLbl;
-	private JButton[] btnRaise;
+	private JLabel[] lblComputerCard;
+	private JLabel[] lblPlayerCard;
 	private DecimalFormat df;
 	private Player[] player;
 
 	public GamePlay(GameGui gui) {
 		this.gui = gui;
-		this.computerCardLbl = gui.getComputerCardLbl();
-		this.playerCardLbl = gui.getPlayerCardLbl();
-		this.btnRaise = gui.getRaiseBtn();
+		this.lblComputerCard = gui.getLblComputerCard();
+		this.lblPlayerCard = gui.getLblPlayerCard();
 		this.player = gui.getPlayer();
 
 		cards = new ArrayList<Card>();
@@ -51,7 +48,6 @@ public class GamePlay {
 	}
 
 	public void gamePlay() {
-		JOptionPane.showMessageDialog(gui.getBoard(), "게임 시작");
 		gui.setTxtNotice("[게임 시작]");
 
 		// 플레이어 카드 초기화
@@ -72,8 +68,50 @@ public class GamePlay {
 		// 카드 돌리기(횟수)
 		cardSpread(3);
 
-		// 베팅 버튼 활성화
-		btnRaiseEnable();
+		// 베팅
+		betting();
+	}
+
+	private void betting() {
+		// 플레이어 베팅 순서
+		playerBetOrder();
+
+		if (player[0].getTurn()) {
+			// 베팅 버튼 활성화
+			gui.btnRaiseEnable(true);
+
+			gui.turnChange(player[0]);
+		} else {
+			// 베팅 버튼 비활성화
+			gui.btnRaiseEnable(false);
+
+			betComputer();
+			gui.turnChange(player[1]);
+		}
+	}
+
+	private void playerBetOrder() {
+		int spreadCard = getSpreadCardIndex();
+
+		spreadCard -= 1;
+		if (spreadCard == 2) {
+			if (player[0].getCard(0).getNumberOrder() > player[1].getCard(0).getNumberOrder()) {
+				player[0].setTurn(true);
+				player[1].setTurn(false);
+			} else if (player[0].getCard(0).getNumberOrder() < player[1].getCard(0).getNumberOrder()) {
+				player[0].setTurn(false);
+				player[1].setTurn(true);
+			} else if (player[0].getCard(0).getNumberOrder() == player[1].getCard(0).getNumberOrder()) {
+				if (player[0].getCard(0).getSuitType().getRank() > player[1].getCard(0).getSuitType().getRank()) {
+					player[0].setTurn(true);
+					player[1].setTurn(false);
+				} else if (player[0].getCard(0).getSuitType().getRank() < player[1].getCard(0).getSuitType()
+						.getRank()) {
+					player[0].setTurn(false);
+					player[1].setTurn(true);
+				}
+			}
+		}
 	}
 
 	private void playerCardClear() {
@@ -87,15 +125,21 @@ public class GamePlay {
 		betMoney(player[1], betDefaultMoney);
 	}
 
-	public boolean betMoney(Player player, int betMoney) {
-		if (!moneyCheck(player, betMoney)) {
-			return false;
-		}
-
+	public void betMoney(Player player, int betMoney) {
 		int plateMoney = gui.getTxtPlate();
 		int money = player.getMoney();
 
-		// 100원 단위 금액은 돌려줌
+		if (!moneyCheck(player, betMoney)) {
+			betMoney = money;
+
+			if (player.getName().equals(Board.PLAYER_NAME)) {
+				gui.setLblPlayerResult("ALL IN");
+			} else {
+				gui.setLblComputerResult("ALL IN");
+			}
+		}
+
+		// 10원 단위 금액은 돌려줌
 		int change = betMoney % 100;
 		betMoney -= change;
 
@@ -107,28 +151,61 @@ public class GamePlay {
 		gui.setTxtPlate(df.format(plateMoney));
 		if (player.getName().equals(Board.PLAYER_NAME)) {
 			gui.setTxtPlayerMoney(df.format(money));
+			gui.setLblPlayerBetMoney(betMoney);
 		} else if (player.getName().equals(Board.COMPUTER_NAME)) {
 			gui.setTxtComputerMoney(df.format(money));
+			gui.setLblComputerBetMoney(betMoney);
 		}
 
 		gui.setTxtNotice(player.getName() + "님이 " + betMoney + "원을 베팅했습니다.");
-
-		return true;
 	}
 
-	public void bet(String betType) {
+	public void betPlayer(String betType) {
+		gui.btnRaiseEnable(false);
+
 		// 하프 버튼이면 베팅
 		if (betType.equals(RaiseType.Half.getValue())) {
 			int plateHalfMoney = gui.getTxtPlate() / 2;
-			if (!betMoney(player[0], plateHalfMoney)) {
-				return;
-			}
-			plateHalfMoney = gui.getTxtPlate() / 2;
-			if (!betMoney(player[1], plateHalfMoney)) {
-				return;
-			}
+			betMoney(player[0], plateHalfMoney);
 		}
 
+		if (getSpreadCardIndex() != 7) {
+			// 컴퓨터 베팅
+			betComputer();
+		}
+
+		betAfter();
+	}
+
+	private void betComputer() {
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					gui.btnResetEnable(false);
+
+					gui.turnChange(player[1]);
+
+					sleep(1000);
+
+					// 컴퓨터 베팅은 하프로 고정
+					gui.setTxtNotice("[" + player[1].getName() + "] - 하프");
+					int plateHalfMoney = gui.getTxtPlate() / 2;
+					betMoney(player[1], plateHalfMoney);
+
+					gui.btnRaiseEnable(true);
+
+					gui.turnChange(player[0]);
+
+					gui.btnResetEnable(true);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	private void betAfter() {
 		// 마지막 카드인지 확인
 		if (lastCardCheck()) {
 			return;
@@ -144,12 +221,6 @@ public class GamePlay {
 	private void halfMoneyDisplay() {
 		int halfMoney = gui.getTxtPlate() / 2;
 		gui.setTxtHalf(halfMoney);
-	}
-
-	private void btnRaiseEnable() {
-		for (int i = 0; i < btnRaise.length; i++) {
-			btnRaise[i].setEnabled(true);
-		}
 	}
 
 	private void btnImageInsert(JLabel lbl, String fileName) {
@@ -173,22 +244,21 @@ public class GamePlay {
 
 			Card card1 = cards.get(0);
 			player[0].setCard(card1);
-			playerCardLbl[i].setName(card1.getSuit() + "-" + card1.getNumberOrder());
-			btnImageInsert(playerCardLbl[i], card1.getSuit(), card1.getNumberOrder());
+			lblPlayerCard[i].setName(card1.getSuit() + "-" + card1.getNumberOrder());
+			btnImageInsert(lblPlayerCard[i], card1.getSuit(), card1.getNumberOrder());
 			cards.remove(0);
-			cardSpreadMove(player[0], playerCardLbl[i]);
+			cardSpreadMove(player[0], lblPlayerCard[i]);
 
 			Card card2 = cards.get(0);
 			player[1].setCard(card2);
-			computerCardLbl[i].setName(card2.getSuit() + "-" + card2.getNumberOrder());
-			cardSpreadMove(player[1], computerCardLbl[i]);
-
+			lblComputerCard[i].setName(card2.getSuit() + "-" + card2.getNumberOrder());
 			// 컴퓨터는 두번째, 세번째, 마지막 카드는 오픈 안함
 			if (i == 1 || i == 2 || i == (player[1].CARD_TOTAL_COUNT - 1)) {
-				btnImageInsert(computerCardLbl[i], "back");
+				btnImageInsert(lblComputerCard[i], "back");
 			} else {
-				btnImageInsert(computerCardLbl[i], card2.getSuit(), card2.getNumberOrder());
+				btnImageInsert(lblComputerCard[i], card2.getSuit(), card2.getNumberOrder());
 			}
+			cardSpreadMove(player[1], lblComputerCard[i]);
 			cards.remove(0);
 		}
 	}
@@ -232,14 +302,12 @@ public class GamePlay {
 
 	public boolean lastCardCheck() {
 		int spreadCard = getSpreadCardIndex();
+
 		if (spreadCard == player[0].CARD_TOTAL_COUNT) {
 			gui.setTxtNotice("마지막 카드를 돌렸습니다.");
 
 			// 가려진 컴퓨터 카드 이미지 open
 			computerCardOpen();
-
-			// 베팅 버튼 초기화
-			gui.resetRaiseBtn();
 
 			// 족보 확인
 			cardHandCheck();
@@ -250,11 +318,19 @@ public class GamePlay {
 			// 플레이어 기본 베팅 금액이 있는지 확인
 			// 컴퓨터
 			if (!moneyCheck(player[0], gui.getBetDefaultMoney())) {
+				gameEnd(player[0]);
 				return false;
 			}
 			// 플레이어
 			if (!moneyCheck(player[1], gui.getBetDefaultMoney())) {
+				gameEnd(player[1]);
 				return false;
+			}
+
+			try {
+				Thread.sleep(2500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			// 다음 게임 시작
@@ -265,8 +341,20 @@ public class GamePlay {
 		return false;
 	}
 
+	private void gameEnd(Player player) {
+		gui.resetTurn();
+		gui.btnRaiseEnable(false);
+		if (player.getName().equals(Board.PLAYER_NAME)) {
+			gui.winnerDisplay(this.player[1]);
+			gui.setLblComputerResult("WIN");
+		} else {
+			gui.winnerDisplay(this.player[0]);
+			gui.setLblPlayerResult("WIN");
+		}
+	}
+
 	private void computerCardOpen() {
-		for (JLabel lbl : computerCardLbl) {
+		for (JLabel lbl : lblComputerCard) {
 			lbl.setIcon(new ImageIcon("img/" + lbl.getName() + ".png"));
 		}
 	}
@@ -278,21 +366,20 @@ public class GamePlay {
 		CardHandType playerHand = player[0].getHand();
 		CardHandType computerHand = player[1].getHand();
 
-		String winner = "";
 		if (playerHand.getNumber() < computerHand.getNumber()) {
 			takeMoney(player[1]);
-			winner = "컴퓨터 승";
+			gui.setLblComputerResult("WIN");
 		} else if (playerHand.getNumber() > computerHand.getNumber()) {
 			takeMoney(player[0]);
-			winner = "플레이어 승";
+			gui.setLblPlayerResult("WIN");
 		} else {
 			int gameWin = gui.drawCheck(player);
 			if (gameWin == 0) {
 				takeMoney(player[0]);
-				winner = "플레이어 승";
+				gui.setLblPlayerResult("WIN");
 			} else if (gameWin == 1) {
 				takeMoney(player[1]);
-				winner = "컴퓨터 승";
+				gui.setLblComputerResult("WIN");
 			}
 		}
 
@@ -300,15 +387,9 @@ public class GamePlay {
 		String computerSuitSymbol = suitSymbol(player[1].getBestCard().getSuit());
 		String playerNumSymbol = numberSymbol(player[1].getBestCard().getNumberOrder());
 		String computerNumSymbol = numberSymbol(player[0].getBestCard().getNumberOrder());
-		StringBuilder msg = new StringBuilder();
-		msg.append("\n");
-		msg.append("컴퓨터 카드:" + computerHand + "(" + computerSuitSymbol + playerNumSymbol + ")\n");
-		msg.append("플레이어 카드:" + playerHand + "(" + playerSuitSymbol + computerNumSymbol + ")\n");
-		msg.append("승자:" + winner + "\n");
-		msg.append("\n");
 
-		JOptionPane.showMessageDialog(gui.getBoard(), msg);
-		gui.setTxtNotice("[" + winner + "]");
+		gui.setLblPlayerRank(playerHand.name() + "(" + playerSuitSymbol + computerNumSymbol + ")");
+		gui.setLblComputerRank(computerHand.name() + "(" + computerSuitSymbol + playerNumSymbol + ")");
 	}
 
 	private String numberSymbol(int number) {
@@ -368,7 +449,6 @@ public class GamePlay {
 		}
 
 		if (money < 0 || money - betMoney < 0) {
-			JOptionPane.showMessageDialog(gui.getBoard(), player.getName() + "님의 돈이 부족합니다.");
 			return false;
 		}
 		return true;
@@ -385,23 +465,35 @@ public class GamePlay {
 	}
 
 	public void raiseHalf() {
-		gui.setTxtNotice("[하프]");
-		bet(RaiseType.Half.getValue());
+		new Thread() {
+			@Override
+			public void run() {
+				gui.setTxtNotice("[" + player[0].getName() + "] - 하프");
+				betPlayer(RaiseType.Half.getValue());
+			}
+		}.start();
 	}
 
 	public void raiseDie() {
-		gui.setTxtNotice("[다이]");
+		gui.setTxtNotice("[" + player[0].getName() + "] - 다이");
 		if (playerMoneyCheck()) {
 			return;
 		}
 
 		takeMoney(player[1]);
 
+		gui.btnRaiseEnable(false);
+
 		gamePlay();
 	}
 
 	public void raiseCheck() {
-		gui.setTxtNotice("[체크]");
-		bet(RaiseType.Check.getValue());
+		new Thread() {
+			@Override
+			public void run() {
+				gui.setTxtNotice("[" + player[0].getName() + "] - 체크");
+				betPlayer(RaiseType.Check.getValue());
+			}
+		}.start();
 	}
 }

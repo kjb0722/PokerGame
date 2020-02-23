@@ -1,7 +1,7 @@
 package com.poker.emun;
 
 public enum SuitType {
-	clubs(0), diamonds(1), hearts(2), spades(3);
+	clubs(0), hearts(1), diamonds(2), spades(3);
 
 	private int rank;
 

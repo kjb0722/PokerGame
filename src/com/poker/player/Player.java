@@ -13,12 +13,21 @@ public class Player {
 	private ArrayList<Card> card;
 	private CardHandType hand;
 	private Card bestCard;
+	private boolean isTurn;
 
 	public Player(String name, int money) {
 		this.name = name;
 		this.money = money;
 
 		this.card = new ArrayList<Card>();
+	}
+
+	public boolean getTurn() {
+		return isTurn;
+	}
+
+	public void setTurn(boolean isTurn) {
+		this.isTurn = isTurn;
 	}
 
 	public int getBestNumberOrder() {

@@ -1,7 +1,5 @@
 package com.poker.gui;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,10 +33,6 @@ public class GameGui extends JFrame {
 		play.cardSpread(count);
 	}
 
-	public void resetRaiseBtn() {
-		board.resetRaiseBtn();
-	}
-
 	private void init() {
 		board = new Board(this);
 		add(board);
@@ -47,10 +41,10 @@ public class GameGui extends JFrame {
 		add(menu);
 
 		rank = new Rank();
-		
+
 		setLayout(null);
 		setTitle("1:1 포커 게임");
-		setUndecorated(true);
+//		setUndecorated(true);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(0, 0, WIDTH, HEIGHT);
@@ -62,18 +56,14 @@ public class GameGui extends JFrame {
 		board.resetPlayerMoney();
 	}
 
-	public JLabel[] getComputerCardLbl() {
-		return board.getComputerCardLbl();
+	public JLabel[] getLblComputerCard() {
+		return board.getLblComputerCard();
 	}
 
-	public JLabel[] getPlayerCardLbl() {
-		return board.getPlayerCardLbl();
+	public JLabel[] getLblPlayerCard() {
+		return board.getLblPlayerCard();
 	}
-
-	public JButton[] getRaiseBtn() {
-		return board.getRaiseBtn();
-	}
-
+	
 	public String getTxtNotice() {
 		return menu.getTxtNotice();
 	}
@@ -83,15 +73,11 @@ public class GameGui extends JFrame {
 	}
 
 	public void rankCheck(Player player) {
-		rank.Checker(player);
+		rank.rankChecker(player);
 	}
 
 	public Board getBoard() {
 		return board;
-	}
-
-	public void bet(String betType) {
-		play.bet(betType);
 	}
 
 	public int getTxtPlate() {
@@ -126,8 +112,8 @@ public class GameGui extends JFrame {
 		play.raiseDie();
 	}
 
-	public void resetCardBtn() {
-		board.resetCardBtn();
+	public void resetCardLbl() {
+		board.resetCardLbl();
 	}
 
 	public void raiseCheck() {
@@ -168,5 +154,53 @@ public class GameGui extends JFrame {
 
 	public void setMoneyInit() {
 		board.setMoneyInit();
+	}
+
+	public void setLblPlayerRank(String text) {
+		board.setlblPlayerRank(text);
+	}
+
+	public void setLblComputerRank(String text) {
+		board.setLblComputerRank(text);
+	}
+
+	public void turnChange(Player player) {
+		board.turnChange(player);
+	}
+
+	public void resetTurn() {
+		board.resetTurn();
+	}
+
+	public void setLblPlayerBetMoney(int betMoney) {
+		board.setLblPlayerBetMoney(Integer.toString(betMoney));
+	}
+
+	public void setLblComputerBetMoney(int betMoney) {
+		board.setLblComputerBetMoney(Integer.toString(betMoney));
+	}
+
+	public void setLblPlayerResult(String text) {
+		board.setLblPlayerResult(text);
+	}
+
+	public void setLblComputerResult(String text) {
+		board.setLblComputerResult(text);
+	}
+
+	public void resetResult() {
+		board.resetResult();
+	}
+
+	public void btnRaiseEnable(boolean enable) {
+		board.btnRaiseEnable(enable);
+	}
+
+	public void winnerDisplay(Player player) {
+		board.winnerDisplay(player);
+	}
+
+	public void btnResetEnable(boolean enable) {
+		menu.btnResetEnable(enable);
 	}
 }
